@@ -82,10 +82,10 @@ String.100.0=STM8S003F3P
 
 [Root.Config.0.Settings.3]
 String.2.0=Compiling $(InputFile)...
-String.3.0=cxstm8 +mods0 -customDebCompat -customOpt-no -customC-pp -customLst -l -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
+String.3.0=cxstm8 +mods0 -customDebCompat -customOpt -no +split -customC-pp -customLst -l -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2020,12,5,19,11,3
+String.6.0=2020,12,6,14,19,33
 
 [Root.Config.0.Settings.4]
 String.2.0=Assembling $(InputFile)...
@@ -217,7 +217,7 @@ String.6.0=2020,12,4,14,7,8
 [Root.Source Files]
 ElemType=Folder
 PathName=Source Files
-Child=Root.Source Files.main.c
+Child=Root.Source Files.led_function.c
 Next=Root.Include Files
 Config.0=Root.Source Files.Config.0
 Config.1=Root.Source Files.Config.1
@@ -242,10 +242,10 @@ Int.1=0
 
 [Root.Source Files.Config.0.Settings.1]
 String.2.0=Compiling $(InputFile)...
-String.3.0=cxstm8 +mods0 -customDebCompat -customOpt-no -customC-pp -customLst -l -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
+String.3.0=cxstm8 +mods0 -customDebCompat -customOpt -no +split -customC-pp -customLst -l -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2020,12,5,19,11,3
+String.6.0=2020,12,6,14,19,33
 
 [Root.Source Files.Config.0.Settings.2]
 String.2.0=Assembling $(InputFile)...
@@ -287,6 +287,16 @@ String.3.0=
 String.4.0=
 String.5.0=
 String.6.0=2020,12,4,14,7,8
+
+[Root.Source Files.led_function.c]
+ElemType=File
+PathName=led_function.c
+Next=Root.Source Files.led_setup.c
+
+[Root.Source Files.led_setup.c]
+ElemType=File
+PathName=led_setup.c
+Next=Root.Source Files.main.c
 
 [Root.Source Files.main.c]
 ElemType=File
@@ -380,7 +390,7 @@ PathName=stm8sdl\src\stm8s_wwdg.c
 [Root.Include Files]
 ElemType=Folder
 PathName=Include Files
-Child=Root.Include Files.stm8sdl\inc\stm8s.h
+Child=Root.Include Files.led_function.h
 Config.0=Root.Include Files.Config.0
 Config.1=Root.Include Files.Config.1
 
@@ -404,10 +414,10 @@ Int.1=0
 
 [Root.Include Files.Config.0.Settings.1]
 String.2.0=Compiling $(InputFile)...
-String.3.0=cxstm8 +mods0 -customDebCompat -customOpt-no -customC-pp -customLst -l -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
+String.3.0=cxstm8 +mods0 -customDebCompat -customOpt -no +split -customC-pp -customLst -l -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2020,12,5,19,11,3
+String.6.0=2020,12,6,14,19,33
 
 [Root.Include Files.Config.0.Settings.2]
 String.2.0=Assembling $(InputFile)...
@@ -449,6 +459,16 @@ String.3.0=
 String.4.0=
 String.5.0=
 String.6.0=2020,12,4,14,7,8
+
+[Root.Include Files.led_function.h]
+ElemType=File
+PathName=led_function.h
+Next=Root.Include Files.led_setup.h
+
+[Root.Include Files.led_setup.h]
+ElemType=File
+PathName=led_setup.h
+Next=Root.Include Files.stm8sdl\inc\stm8s.h
 
 [Root.Include Files.stm8sdl\inc\stm8s.h]
 ElemType=File
