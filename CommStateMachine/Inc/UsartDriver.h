@@ -61,9 +61,10 @@ struct UsartDriverInfo {
     uint8_t txCRC16 [2];
     //receive
     RxCallback rxCallBack;
-    UsartEvent * rxUsartEvent;
+    UsartEvent rxUsartEvent;
+		UsartEvent abortUsartEvent;
     RxHandlerState rxState;
-    int requestRxPacket;
+		int isEventOccupied;
     int rxCounter;
     int rxLen;
     uint8_t * rxMallocBuffer;
@@ -106,4 +107,5 @@ void allocMemForReceiver(Event * event);
 void freeMemForReceiver(Event * event);
 //removeUSartEvent
 void removeTimerEventFromQueue(Event * event);
+void removeAbortEventFromQueue(UsartEvent * evt);
 #endif // USARTDRIVER_H
