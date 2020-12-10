@@ -448,7 +448,7 @@ void removeTimerEventFromQueue(Event * event){
 void removeAbortEventFromQueue(UsartEvent * evt){
 	Event * abortEvent = (Event*)evt->data;
 	disableIRQ();
-	if(!eventDequeue(&evtQueue,&abortEvent)){
+	if(!eventQueueDeleteEvent(&evtQueue,abortEvent)){
 		timerEventDequeueSelectedEvent(&timerQueue,(TimerEvent*)abortEvent);
 	}
 	enableIRQ();

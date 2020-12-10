@@ -35,3 +35,16 @@ int eventCompareSameTimeEvent(TimerEvent *currentEvent, Event * deleteEvent){
 		return 0;
 	}
 }
+
+int eventCompareSameEvent(Event *currentEvent, Event * deleteEvent){
+	if(currentEvent == NULL || deleteEvent == NULL)
+		return 0;
+
+	if(currentEvent == deleteEvent){
+		return 1 ;
+	}
+	else{
+		return 0;
+	}
+}
+

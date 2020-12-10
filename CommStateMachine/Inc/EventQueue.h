@@ -12,4 +12,5 @@ struct EventQueue{
 
 void eventEnqueue(EventQueue * queue,Event * event);
 int  eventDequeue(EventQueue * queue,Event ** event);
+void * eventQueueDeleteEvent(EventQueue * eventQueue,Event * deletedEvent);
 #endif // EVENTQUEUE_H
