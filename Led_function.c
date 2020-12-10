@@ -55,11 +55,21 @@ void setLEDIntensity(uint16_t inputValue){
 	value= (uint32_t)calValue;
 	TIM1_SetCompare3(value) ;
 }
+LedFunctionState ledIntensityState = LED_FN_IDLE;
+void configureLEDIntensity(Event * event){
+	uint8_t intensity;
+	UsartEvent * usartEvent = (UsartEvent*)event;
+	char * data = usartEvent->buffer;
 
-void configureLEDIntensity(char * data){
-	int intensity;
-	intensity = data[5];
-	
-	setLEDIntensity(intensity);
-	generateFlagAndTransmit(MAIN_CONTROLLER,1,UF_CMD_OK,NULL);
+	switch(ledIntensityState){
+        case LED_FN_IDLE :
+						intensity = data[5];
+						setLEDIntensity(intensity);
+						generateFlagAndTransmit(MAIN_CONTROLLER,MASTER_ADDRESS,UF_CMD_OK,usartEvent);
+						ledIntensityState = LED_FN_REPLY_PACKET;
+            break;
+        case LED_FN_REPLY_PACKET:
+            ledIntensityState = LED_FN_IDLE;
+            break;
+    }	
 }

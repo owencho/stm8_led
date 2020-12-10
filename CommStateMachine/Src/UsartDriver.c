@@ -16,12 +16,12 @@ GenericStateMachine freeMemInfo;
 uint8_t txDataForFlags[2];
 volatile UsartDriverInfo usartDriverInfo;
 
-#define hasRequestedTxPacket(info) ((info)->requestTxPacket)
-#define hasRequestedRxPacket(info) ((info)->requestRxPacket)
-#define isLastTxByte(info) ((info->txLen) < (info->txCounter)+1)
-#define isLastRxByte(info) ((info->rxLen) <= (info->rxCounter)-PAYLOAD_OFFSET)
-#define getCommandByte(info) (info->rxMallocBuffer[CMD_OFFSET])
-#define getSenderAddress(info) (info->rxMallocBuffer[SENDER_ADDRESS_OFFSET])
+#define hasRequestedTxPacket(info) ((info).requestTxPacket)
+#define hasRequestedRxPacket(info) ((info).requestRxPacket)
+#define isLastTxByte(info) ((info.txLen) < (info.txCounter)+1)
+#define isLastRxByte(info) ((info.rxLen) <= (info.rxCounter)-PAYLOAD_OFFSET)
+#define getCommandByte(info) (info.rxMallocBuffer[CMD_OFFSET])
+#define getSenderAddress(info) (info.rxMallocBuffer[SENDER_ADDRESS_OFFSET])
 
 STATIC int findPacketLength(uint8_t* data){
     int size = *(&data + 1) - data;
@@ -33,8 +33,8 @@ STATIC int getPacketLength(uint8_t * txData){
     return packetLength;
 }
 
-STATIC int isCorrectAddress(UsartDriverInfo *info){
-    char * packet = info->rxStaticBuffer;
+STATIC int isCorrectAddress(UsartDriverInfo info){
+    char * packet = info.rxStaticBuffer;
     char usartAddress = *(packet + RECEIVER_ADDRESS_OFFSET);
 
     if((int)usartAddress == USART_ADDRESS)
@@ -44,22 +44,21 @@ STATIC int isCorrectAddress(UsartDriverInfo *info){
 }
 
 STATIC void usartDriverInit(void){
-		#define info (usartDriverInfo)
     //UsartDriverInfo * info =&usartDriverInfo;
-    info.txUsartEvent = NULL;
-    info.txState = TX_IDLE;
-    info.txBuffer = NULL;
-    info.requestTxPacket = 0;
-    info.txCounter = 0;
-    info.txLen = 0;
-    info.txFlag = 0;
+    usartDriverInfo.txUsartEvent = NULL;
+    usartDriverInfo.txState = TX_IDLE;
+    usartDriverInfo.txBuffer = NULL;
+    usartDriverInfo.requestTxPacket = 0;
+    usartDriverInfo.txCounter = 0;
+    usartDriverInfo.txLen = 0;
+    usartDriverInfo.txFlag = 0;
 
-    info.rxUsartEvent = NULL;
-    info.rxState = RX_IDLE;
-    info.rxMallocBuffer = NULL;
-    info.requestRxPacket = 0;
-    info.rxCounter = 0;
-    info.rxLen = 0;
+    usartDriverInfo.rxUsartEvent = NULL;
+    usartDriverInfo.rxState = RX_IDLE;
+    usartDriverInfo.rxMallocBuffer = NULL;
+    usartDriverInfo.requestRxPacket = 0;
+    usartDriverInfo.rxCounter = 0;
+    usartDriverInfo.rxLen = 0;
 
     mallocInfo.callback = (Callback)allocMemForReceiver;
     freeMemInfo.callback = (Callback)freeMemForReceiver;
@@ -71,69 +70,68 @@ void usartInit(void){
 }
 
 void usartDriverTransmit(UsartPort port,uint8_t rxAddress,int length,uint8_t * txData,UsartEvent * event){
-		UsartDriverInfo * info =&usartDriverInfo;
 		disableIRQ();
 
-    if(!hasRequestedTxPacket(info)){
-        info->txLen =length;
-        info->receiverAddress = rxAddress;
-        info->txUsartEvent = event;
-        info->txBuffer = txData;
+    if(!hasRequestedTxPacket(usartDriverInfo)){
+        usartDriverInfo.txLen =length;
+        usartDriverInfo.receiverAddress = rxAddress;
+        usartDriverInfo.txUsartEvent = event;
+        usartDriverInfo.txBuffer = txData;
         generateCRC16forTxPacket(port);
-        info->requestTxPacket = 1;
+        usartDriverInfo.requestTxPacket = 1;
         hardwareUsartTransmit(port);
     }
     enableIRQ();
 }
 
 uint8_t usartTransmissionHandler(UsartPort port){
-    UsartDriverInfo * info =&usartDriverInfo;
-    uint8_t * txBuffer = info->txBuffer;
-    uint8_t * txCRC16 = info->txCRC16;
-    UsartEvent * event = info->txUsartEvent;
+    uint8_t * txBuffer = usartDriverInfo.txBuffer;
+    uint8_t * txCRC16 = usartDriverInfo.txCRC16;
+    UsartEvent * event = usartDriverInfo.txUsartEvent;
     uint8_t transmitByte;
 
-    switch(info->txState){
+    switch(usartDriverInfo.txState){
         case TX_IDLE :
-            transmitByte = info->receiverAddress;
-            info->txState = TX_SEND_RECEIVER_ADDRESS;
+            transmitByte = usartDriverInfo.receiverAddress;
+            usartDriverInfo.txState = TX_SEND_RECEIVER_ADDRESS;
             break;
         case TX_SEND_RECEIVER_ADDRESS:
             transmitByte = USART_ADDRESS;
-            info->txState = TX_SEND_TRANSMITTER_ADDRESS;
+            usartDriverInfo.txState = TX_SEND_TRANSMITTER_ADDRESS;
             break;
         case TX_SEND_TRANSMITTER_ADDRESS:
-            transmitByte = info->txLen;
-            info->txState = TX_SEND_LENGTH;
+            transmitByte = usartDriverInfo.txLen;
+            usartDriverInfo.txState = TX_SEND_LENGTH;
             break;
         case TX_SEND_LENGTH:
-            transmitByte = info->txFlag;
-            info->txState = TX_SEND_FLAG;
+            transmitByte = usartDriverInfo.txFlag;
+            usartDriverInfo.txState = TX_SEND_FLAG;
             break;
         case TX_SEND_FLAG:
-            transmitByte = txBuffer[info->txCounter];
-            info->txCounter ++;
-            info->txState = TX_SEND_BYTE;
+            transmitByte = txBuffer[usartDriverInfo.txCounter];
+            usartDriverInfo.txCounter ++;
+            usartDriverInfo.txState = TX_SEND_BYTE;
             break;
         case TX_SEND_BYTE:
-            transmitByte = txBuffer[info->txCounter];
-            info->txCounter ++;
-            if(isLastTxByte(info)){
-                info->txCounter = 0;
-                info->txState = TX_SEND_CRC16;
+            transmitByte = txBuffer[usartDriverInfo.txCounter];
+            usartDriverInfo.txCounter ++;
+            if(isLastTxByte(usartDriverInfo)){
+                usartDriverInfo.txCounter = 0;
+                usartDriverInfo.txState = TX_SEND_CRC16;
             }
             break;
         case TX_SEND_CRC16:
-            transmitByte = txCRC16[info->txCounter];
-            info->txCounter ++;
-            if(info->txCounter > 1){
+            transmitByte = txCRC16[usartDriverInfo.txCounter];
+            usartDriverInfo.txCounter ++;
+            if(usartDriverInfo.txCounter > 1){
+								setHardwareTxLastByte(port);
+								usartDriverInfo.txCounter = 0;
+                usartDriverInfo.requestTxPacket = 0;
+                usartDriverInfo.txState = TX_IDLE;
                 event->type = TX_COMPLETE;
-                setHardwareTxLastByte(port);
-                //eventEnqueue(&evtQueue,(Event*)event);
-                hardwareUsartReceive(port);
-								info->txCounter = 0;
-                info->requestTxPacket = 0;
-                info->txState = TX_IDLE;
+                eventEnqueue(&evtQueue,(Event*)event);
+								setHardwareTxLastByte(port);
+
             }
             break;
     }
@@ -143,17 +141,16 @@ uint8_t usartTransmissionHandler(UsartPort port){
 void usartReceiveHandler(UsartPort port,uint16_t rxByte){
     uint8_t eventByte = rxByte >> 8;
     uint8_t dataByte = rxByte & 0xFF;
-    UsartDriverInfo * info =&usartDriverInfo;
-    UsartEvent * evt = info->rxUsartEvent;
-    uint8_t * staticBuffer = info->rxStaticBuffer;
-    uint8_t * mallocBuffer = info->rxMallocBuffer;
-    uint8_t * rxCRC16 = info->rxCRC16;
+    UsartEvent * evt = usartDriverInfo.rxUsartEvent;
+    uint8_t * staticBuffer = usartDriverInfo.rxStaticBuffer;
+    uint8_t * mallocBuffer = usartDriverInfo.rxMallocBuffer;
+    uint8_t * rxCRC16 = usartDriverInfo.rxCRC16;
 
-    switch(info->rxState){
+    switch(usartDriverInfo.rxState){
         case RX_IDLE :
             if(eventByte == RX_PACKET_START){
-                info->rxCounter = 0;
-                info->rxState = RX_ADDRESS_LENGTH;
+                usartDriverInfo.rxCounter = 0;
+                usartDriverInfo.rxState = RX_ADDRESS_LENGTH;
             }
             break;
         case RX_ADDRESS_LENGTH :
@@ -175,13 +172,13 @@ void usartReceiveHandler(UsartPort port,uint16_t rxByte){
             if(eventByte == MALLOC_REQUEST_EVT){
                 strcpy(mallocBuffer, staticBuffer);
 								generateEventForReceiveComplete(port);
-                info->rxState = RX_IDLE;
+                usartDriverInfo.rxState = RX_IDLE;
             }
             break;
         case RX_WAIT_FOR_FREE_MALLOC_BUFFER:
             if(eventByte == FREE_MALLOC_EVT){
 								resetUsartDriverReceive(port);
-                info->rxState = RX_IDLE;
+                usartDriverInfo.rxState = RX_IDLE;
             }
     }
 }
@@ -189,31 +186,30 @@ void usartReceiveHandler(UsartPort port,uint16_t rxByte){
 STATIC void handleRxAddressAndLength(UsartPort port,uint16_t rxByte){
     uint8_t eventByte = rxByte >> 8;
     uint8_t dataByte = rxByte & 0xFF;
-    UsartDriverInfo * info =&usartDriverInfo;
-    UsartEvent * evt = info->rxUsartEvent;
-    uint8_t * staticBuffer = info->rxStaticBuffer;
+    UsartEvent * evt = usartDriverInfo.rxUsartEvent;
+    uint8_t * staticBuffer = usartDriverInfo.rxStaticBuffer;
 
     if(eventByte == RX_PACKET_START){
         resetUsartDriverReceive(port);
-        info->rxState = RX_ADDRESS_LENGTH;
+        usartDriverInfo.rxState = RX_ADDRESS_LENGTH;
         return;
     }
-    else if(info->rxCounter < 3){
-        staticBuffer[info->rxCounter] = dataByte;
-        info->rxCounter++;
+    else if(usartDriverInfo.rxCounter < 3){
+        staticBuffer[usartDriverInfo.rxCounter] = dataByte;
+        usartDriverInfo.rxCounter++;
     }
 
-    if (info->rxCounter >= 3 ){
-        if(isCorrectAddress(info)){
-            info->rxLen = staticBuffer[LENGTH_OFFSET];
-            info->sysEvent.stateMachineInfo = &mallocInfo;
-            info->sysEvent.data = (void*)info;
-            eventEnqueue(&sysQueue,(Event*)&info->sysEvent);
-            info->rxState = RX_RECEIVE_PAYLOAD_STATIC_BUFFER;
+    if (usartDriverInfo.rxCounter >= 3 ){
+        if(isCorrectAddress(usartDriverInfo)){
+            usartDriverInfo.rxLen = staticBuffer[LENGTH_OFFSET];
+            usartDriverInfo.sysEvent.stateMachineInfo = &mallocInfo;
+            usartDriverInfo.sysEvent.data = (void*)&usartDriverInfo;
+            eventEnqueue(&sysQueue,(Event*)&usartDriverInfo.sysEvent);
+            usartDriverInfo.rxState = RX_RECEIVE_PAYLOAD_STATIC_BUFFER;
         }
         else{
-            info->rxCounter = 0;
-            info->rxState = RX_IDLE;
+            usartDriverInfo.rxCounter = 0;
+            usartDriverInfo.rxState = RX_IDLE;
         }
     }
 }
@@ -222,25 +218,25 @@ STATIC void handleRxStaticBufferPayload(UsartPort port,uint16_t rxByte){
     uint8_t eventByte = rxByte >> 8;
     uint8_t dataByte = rxByte & 0xFF;
     UsartDriverInfo * info =&usartDriverInfo;
-    uint8_t * staticBuffer = info->rxStaticBuffer;
-    uint8_t * mallocBuffer = info->rxMallocBuffer;
-    uint8_t * rxCRC16 = info->rxCRC16;
+    uint8_t * staticBuffer = usartDriverInfo.rxStaticBuffer;
+    uint8_t * mallocBuffer = usartDriverInfo.rxMallocBuffer;
+    uint8_t * rxCRC16 = usartDriverInfo.rxCRC16;
 
     if(eventByte == RX_PACKET_START){
         resetUsartDriverReceive(port);
-        info->rxState = RX_ADDRESS_LENGTH;
+        usartDriverInfo.rxState = RX_ADDRESS_LENGTH;
     }
     else if(eventByte == MALLOC_REQUEST_EVT){
         strcpy(mallocBuffer, staticBuffer);
-        info->rxState = RX_RECEIVE_PAYLOAD_MALLOC_BUFFER;
+        usartDriverInfo.rxState = RX_RECEIVE_PAYLOAD_MALLOC_BUFFER;
     }
-    else if (isLastRxByte(info)){
+    else if (isLastRxByte(usartDriverInfo)){
         rxCRC16[0] = dataByte;
-        info->rxState = RX_WAIT_CRC16_STATIC_BUFFER;
+        usartDriverInfo.rxState = RX_WAIT_CRC16_STATIC_BUFFER;
     }
     else{
-        staticBuffer[info->rxCounter] = dataByte;
-        info->rxCounter++;
+        staticBuffer[usartDriverInfo.rxCounter] = dataByte;
+        usartDriverInfo.rxCounter++;
     }
 }
 
@@ -248,21 +244,21 @@ STATIC void handleRxMallocBufferPayload(UsartPort port,uint16_t rxByte){
     uint8_t eventByte = rxByte >> 8;
     uint8_t dataByte = rxByte & 0xFF;
     UsartDriverInfo * info =&usartDriverInfo;
-    uint8_t * mallocBuffer = info->rxMallocBuffer;
-    uint8_t * rxCRC16 = info->rxCRC16;
+    uint8_t * mallocBuffer = usartDriverInfo.rxMallocBuffer;
+    uint8_t * rxCRC16 = usartDriverInfo.rxCRC16;
 
     if(eventByte == RX_PACKET_START){
 		requestForFreeMemoryEvent(port);
         resetUsartDriverReceive(port);
-        info->rxState = RX_WAIT_FOR_FREE_MALLOC_BUFFER;
+        usartDriverInfo.rxState = RX_WAIT_FOR_FREE_MALLOC_BUFFER;
     }
-    else if (isLastRxByte(info)){
+    else if (isLastRxByte(usartDriverInfo)){
         rxCRC16[0] = dataByte;
-        info->rxState = RX_WAIT_CRC16_MALLOC_BUFFER;
+        usartDriverInfo.rxState = RX_WAIT_CRC16_MALLOC_BUFFER;
     }
     else{
-        mallocBuffer[info->rxCounter] = dataByte;
-        info->rxCounter++;
+        mallocBuffer[usartDriverInfo.rxCounter] = dataByte;
+        usartDriverInfo.rxCounter++;
     }
 }
 
@@ -270,21 +266,21 @@ STATIC void handleCRC16WithStaticBuffer(UsartPort port,uint16_t rxByte){
     uint8_t eventByte = rxByte >> 8;
     uint8_t dataByte = rxByte & 0xFF;
     UsartDriverInfo * info =&usartDriverInfo;
-    uint8_t * mallocBuffer = info->rxMallocBuffer;
-    uint8_t * staticBuffer = info->rxStaticBuffer;
-    uint8_t * rxCRC16 = info->rxCRC16;
+    uint8_t * mallocBuffer = usartDriverInfo.rxMallocBuffer;
+    uint8_t * staticBuffer = usartDriverInfo.rxStaticBuffer;
+    uint8_t * rxCRC16 = usartDriverInfo.rxCRC16;
 
     if(eventByte == RX_PACKET_START){
         resetUsartDriverReceive(port);
-        info->rxState = RX_ADDRESS_LENGTH;
+        usartDriverInfo.rxState = RX_ADDRESS_LENGTH;
     }
     else if(eventByte == MALLOC_REQUEST_EVT){
         strcpy(mallocBuffer, staticBuffer);
-        info->rxState = RX_WAIT_CRC16_MALLOC_BUFFER;
+        usartDriverInfo.rxState = RX_WAIT_CRC16_MALLOC_BUFFER;
     }
     else{
         rxCRC16[1] = dataByte;
-        info->rxState = RX_WAIT_FOR_MALLOC_BUFFER;
+        usartDriverInfo.rxState = RX_WAIT_FOR_MALLOC_BUFFER;
     }
 }
 
@@ -292,25 +288,25 @@ STATIC void handleCRC16WithMallocBuffer(UsartPort port,uint16_t rxByte){
     uint8_t eventByte = rxByte >> 8;
     uint8_t dataByte = rxByte & 0xFF;
     UsartDriverInfo * info =&usartDriverInfo;
-    uint8_t * rxCRC16 = info->rxCRC16;
+    uint8_t * rxCRC16 = usartDriverInfo.rxCRC16;
 
 	if(eventByte == RX_PACKET_START){
 		requestForFreeMemoryEvent(port);
 		resetUsartDriverReceive(port);
-		info->rxState = RX_WAIT_FOR_FREE_MALLOC_BUFFER;
+		usartDriverInfo.rxState = RX_WAIT_FOR_FREE_MALLOC_BUFFER;
 	}
 	else{
 		rxCRC16[1] = dataByte;
 		generateEventForReceiveComplete(port);
-		info->rxState = RX_IDLE;
+		usartDriverInfo.rxState = RX_IDLE;
 	}
 }
 
 STATIC int checkRxPacketCRC(UsartPort port){
     UsartDriverInfo * info =&usartDriverInfo;
-    int rxLength = info->rxLen;
-    uint8_t * rxCRC16ptr = info->rxCRC16;
-    uint8_t * rxBuffer = info->rxMallocBuffer;
+    int rxLength = usartDriverInfo.rxLen;
+    uint8_t * rxCRC16ptr = usartDriverInfo.rxCRC16;
+    uint8_t * rxBuffer = usartDriverInfo.rxMallocBuffer;
     uint16_t crcRxValue = *(uint16_t*)&rxCRC16ptr[0];
     uint16_t generatedCrc16;
 
@@ -324,8 +320,8 @@ STATIC int checkRxPacketCRC(UsartPort port){
 
 STATIC void generateEventForReceiveComplete(UsartPort port){
     UsartDriverInfo * info =&usartDriverInfo;
-    UsartEvent * rxUsartEvent = info->rxUsartEvent;
-    uint8_t * rxBuffer = info->rxMallocBuffer;
+    UsartEvent * rxUsartEvent = usartDriverInfo.rxUsartEvent;
+    uint8_t * rxBuffer = usartDriverInfo.rxMallocBuffer;
 
     if(checkRxPacketCRC(port)){
         rxUsartEvent->type = PACKET_RX_EVENT;
@@ -338,8 +334,8 @@ STATIC void generateEventForReceiveComplete(UsartPort port){
 
 STATIC void findSMInfoAndGenerateEvent(UsartPort port){
     UsartDriverInfo * info =&usartDriverInfo;
-    UsartEvent * rxUsartEvent = info->rxUsartEvent;
-    uint8_t * rxBuffer = info->rxMallocBuffer;
+    UsartEvent * rxUsartEvent = usartDriverInfo.rxUsartEvent;
+    uint8_t * rxBuffer = usartDriverInfo.rxMallocBuffer;
 		GenericStateMachine * infoSM;
 		char command = rxBuffer[4];
 		
@@ -375,8 +371,8 @@ STATIC void findSMInfoAndGenerateEvent(UsartPort port){
 /*
 STATIC GenericStateMachine * getStateMachineInfoFromAVL(UsartPort port){
     UsartDriverInfo * info =&usartDriverInfo[port];
-    UsartEvent * rxUsartEvent = info->rxUsartEvent;
-    uint8_t * rxBuffer = info->rxMallocBuffer;
+    UsartEvent * rxUsartEvent = usartDriverInfo.rxUsartEvent;
+    uint8_t * rxBuffer = usartDriverInfo.rxMallocBuffer;
     int cmd = getCommandByte(info);
     CmdNode * cmdNode = (CmdNode * )avlFindNode((Node*)rootCmdNode,(void*)&cmd,
                                                 (Compare)cmdCompareForAVL);
@@ -389,9 +385,9 @@ STATIC GenericStateMachine * getStateMachineInfoFromAVL(UsartPort port){
 
 STATIC void generateAndSendNotAvailablePacket(UsartPort port){
 	UsartDriverInfo * info =&usartDriverInfo;
-	uint8_t senderAddress = getSenderAddress(info);
-	UsartEvent * rxUsartEvent = info->rxUsartEvent;
-	uint8_t * rxBuffer = info->rxMallocBuffer;
+	uint8_t senderAddress = getSenderAddress(usartDriverInfo);
+	UsartEvent * rxUsartEvent = usartDriverInfo.rxUsartEvent;
+	uint8_t * rxBuffer = usartDriverInfo.rxMallocBuffer;
 	rxUsartEvent->stateMachineInfo = &freeMemInfo;
 	rxUsartEvent->data = (void*)info;
  	generateFlagAndTransmit(port,senderAddress,UF_CMD_NOT_AVAILABLE,rxUsartEvent);
@@ -400,54 +396,52 @@ STATIC void generateAndSendNotAvailablePacket(UsartPort port){
 
 void generateFlagAndTransmit(UsartPort port,uint8_t rxAddress,UsartDriverFlags flags,UsartEvent * event){
 	UsartDriverInfo * info =&usartDriverInfo;
-	uint8_t * rxBuffer = info->rxMallocBuffer;
+	uint8_t * rxBuffer = usartDriverInfo.rxMallocBuffer;
 	uint8_t flagByte = 1<<flags;
-    txDataForFlags[0]=flagByte;
-    txDataForFlags[1]=getCommandByte(info);
+	txDataForFlags[0]=flagByte;
+	txDataForFlags[1]=getCommandByte(usartDriverInfo);
 	usartDriverTransmit(port,rxAddress,2,txDataForFlags,event);
 }
 
 STATIC void resetUsartDriverReceive(UsartPort port){
     UsartDriverInfo * info =&usartDriverInfo;
-    info->rxState = RX_IDLE;
-    info->rxCounter = 0;
-    info->rxLen = 0;
+    usartDriverInfo.rxState = RX_IDLE;
+    usartDriverInfo.rxCounter = 0;
+    usartDriverInfo.rxLen = 0;
 }
 
 STATIC void generateCRC16forTxPacket(UsartPort port){
-    UsartDriverInfo * info =&usartDriverInfo;
-    uint8_t * txBuffer = info->txBuffer;
-    uint8_t * txCRC16 = info->txCRC16;
-    int length = info->txLen;
+    uint8_t * txBuffer = usartDriverInfo.txBuffer;
+    uint8_t * txCRC16 = usartDriverInfo.txCRC16;
+    int length = usartDriverInfo.txLen;
     uint16_t crc16 ;
     crc16 = generateCrc16(txBuffer, length);
 	*(uint16_t*)&txCRC16[0] = crc16;
 }
 
 STATIC void requestForFreeMemoryEvent(UsartPort port){
-	UsartDriverInfo * info =&usartDriverInfo;
-	info->sysEvent.stateMachineInfo = &freeMemInfo;
-	info->sysEvent.data = (void*)info;
-	eventEnqueue(&sysQueue,(Event*)&info->sysEvent);
+	usartDriverInfo.sysEvent.stateMachineInfo = &freeMemInfo;
+	usartDriverInfo.sysEvent.data = (void*)&usartDriverInfo;
+	eventEnqueue(&sysQueue,(Event*)&usartDriverInfo.sysEvent);
 }
 
 void allocMemForReceiver(Event * event){
 		UsartDriverInfo * info =(UsartDriverInfo*)event->data;
-		int receiverlength = info->rxLen + 3;
+		int receiverlength = usartDriverInfo.rxLen + 3;
     disableIRQ();
-    info->rxMallocBuffer = (uint8_t*) malloc(receiverlength * sizeof(uint8_t));
-    info->rxUsartEvent = (UsartEvent*) malloc(sizeof(UsartEvent));
+    usartDriverInfo.rxMallocBuffer = (uint8_t*) malloc(receiverlength * sizeof(uint8_t));
+    usartDriverInfo.rxUsartEvent = (UsartEvent*) malloc(sizeof(UsartEvent));
     enableIRQ();
-    usartReceiveHandler(info->portName,(MALLOC_REQUEST_EVT << 8));
+    usartReceiveHandler(usartDriverInfo.portName,(MALLOC_REQUEST_EVT << 8));
 }
 
 void freeMemForReceiver(Event * event){
 		UsartDriverInfo * info =(UsartDriverInfo*)event->data;
     disableIRQ();
-    freeMem(info->rxMallocBuffer);
-    freeMem(info->rxUsartEvent);
+    freeMem(usartDriverInfo.rxMallocBuffer);
+    freeMem(usartDriverInfo.rxUsartEvent);
     enableIRQ();
-    usartReceiveHandler(info->portName,(FREE_MALLOC_EVT << 8));
+    usartReceiveHandler(usartDriverInfo.portName,(FREE_MALLOC_EVT << 8));
 }
 
 void removeTimerEventFromQueue(Event * event){

@@ -6,6 +6,7 @@
 #define __STDINT__
 #include "Event.h"
 #include "CommEventQueue.h"
+#include "StateMachine.h"
 #include "UsartHardware.h"
 #include "UsartDriver.h"
 #include "EventQueue.h"
@@ -32,12 +33,16 @@ void Serial_print_int (int number)  {
 		count--;
 	}
 }
-
+//testing
+GenericStateMachine sm;
+UsartEvent uEvent;
 double testTempValue;
 double testVoltageValue;
 double testCurrentValue;
 char testData[10];
+//ori
 Event * event;
+
 int main(void)
 {
 	enableInterrupts();
@@ -55,8 +60,12 @@ int main(void)
 	//TIM1_SetCompare3(value) ;
 	GPIO_WriteHigh(GPIOD,GPIO_PIN_4);
 	*/
+	//test
+	sm.callback = (Callback)configureLEDIntensity;
+	uEvent.stateMachineInfo = &sm;
 	testData[5]= 123;
-	configureLEDIntensity(testData);
+	uEvent.buffer = (uint8_t*)testData;
+	configureLEDIntensity((Event*)&uEvent);
 	while (1){
 		if(eventDequeue(&sysQueue,&event))
 			event->stateMachine->callback(event);

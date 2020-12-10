@@ -9,18 +9,16 @@
 #include "TimerEventQueue.h"
 
 
-#define isLastByte(info) ((info)->lastByte)
+#define isLastByte(info) (info.lastByte)
 
-volatile UsartInfo usartInfo;
-
+volatile UsartInfo usartHardwareInfo;
 STATIC void initUsartHardwareInfo(UsartPort port){
-		#define hwInfo (usartInfo)
-    hwInfo.rxCallBack = (RxCallback)usartReceiveHandler;
-    hwInfo.txCallBack = (TxCallback)usartTransmissionHandler;
-    hwInfo.hwTxState = HW_TX_IDLE;
-    hwInfo.hwRxState = HW_RX_IDLE;
-    hwInfo.txTurn =0;
-    hwInfo.lastByte =0;
+    usartHardwareInfo.rxCallBack = (RxCallback)usartReceiveHandler;
+    usartHardwareInfo.txCallBack = (TxCallback)usartTransmissionHandler;
+    usartHardwareInfo.hwTxState = HW_TX_IDLE;
+    usartHardwareInfo.hwRxState = HW_RX_IDLE;
+    usartHardwareInfo.txTurn =0;
+    usartHardwareInfo.lastByte =0;
 }
 
 void usartHardwareInit(void){
@@ -31,33 +29,30 @@ void usartHardwareInit(void){
 }
 
 void hardwareUsartTransmit(UsartPort port){
-		UsartInfo * info = &usartInfo;
     disableIRQ();
-    info->txTurn = 1;
+    usartHardwareInfo.txTurn = 1;
 		UART1_ITConfig(UART1_IT_TC,ENABLE); 
 
-    //usartEnableTransmission(info->usart);
-    //usartEnableInterrupt(info->usart,TRANS_COMPLETE);
-    //usartDisableReceiver(info->usart);
+    //usartEnableTransmission(usartHardwareInfo.usart);
+    //usartEnableInterrupt(usartHardwareInfo.usart,TRANS_COMPLETE);
+    //usartDisableReceiver(usartHardwareInfo.usart);
     enableIRQ();
 }
 
 void hardwareUsartReceive(UsartPort port){
-		UsartInfo * info =&usartInfo;
     disableIRQ();
-    info->txTurn = 0;
+    usartHardwareInfo.txTurn = 0;
 		UART1_ITConfig(UART1_IT_RXNE_OR,ENABLE); 
-    //usartEnableReceiver(info->usart);
-    //usartEnableInterrupt(info->usart,RXNE_INTERRUPT);
+    //usartEnableReceiver(usartHardwareInfo.usart);
+    //usartEnableInterrupt(usartHardwareInfo.usart,RXNE_INTERRUPT);
     enableIRQ();
 }
 
 void usartIrqHandler(UsartPort port){
-    UsartInfo * info = &usartInfo;
     char rxByte;
     char txByte;
 
-    if(info->txTurn){
+    if(usartHardwareInfo.txTurn){
         txByte = usartTransmitHardwareHandler(port);
 				UART1_ClearITPendingBit(UART1_IT_TC);
 				UART1_ClearFlag(UART1_IT_TC);
@@ -66,42 +61,44 @@ void usartIrqHandler(UsartPort port){
     else{
         rxByte = UART1_ReceiveData8();
 				UART1_ClearITPendingBit(UART1_IT_RXNE);
+				UART1_ClearFlag(UART1_IT_RXNE);
         usartReceiveHardwareHandler(port,rxByte);
     }
 }
 
 uint8_t usartTransmitHardwareHandler(UsartPort port){
-    UsartInfo * info = &usartInfo;
     uint8_t transmitByte;
-    switch(info->hwTxState){
+    switch(usartHardwareInfo.hwTxState){
         case HW_TX_IDLE :
-            info->hwTxState = HW_TX_SEND_DELIMITER;
+            usartHardwareInfo.hwTxState = HW_TX_SEND_DELIMITER;
             transmitByte = 0x7E;
             break;
         case HW_TX_SEND_DELIMITER :
-            info->hwTxState = HW_TX_SEND_BYTE;
+            usartHardwareInfo.hwTxState = HW_TX_SEND_BYTE;
             transmitByte = 0x81;
             break;
         case HW_TX_SEND_BYTE :
-            transmitByte = info->txCallBack(port);
-            //instead of passing port better info->usartDriverInfo
+            transmitByte = usartHardwareInfo.txCallBack(port);
+            //instead of passing port better usartHardwareInfo.usartDriverInfo
             if(transmitByte == 0x7E){
-                info->hwTxState = HW_TX_SEND_7E_BYTE;
+                usartHardwareInfo.hwTxState = HW_TX_SEND_7E_BYTE;
             }
-            else if(isLastByte(info)){
+            else if(usartHardwareInfo.lastByte){
                 endOfUsartTxHandler(port);
-                info->hwTxState = HW_TX_IDLE;
-                info->lastByte = 0;
+								hardwareUsartReceive(port);
+                usartHardwareInfo.hwTxState = HW_TX_IDLE;
+                usartHardwareInfo.lastByte = 0;
             }
             break;
         case HW_TX_SEND_7E_BYTE :
-            if(isLastByte(info)){
+            if(usartHardwareInfo.lastByte){
                 endOfUsartTxHandler(port);
-                info->hwTxState = HW_TX_IDLE;
-                info->lastByte = 0;
+								hardwareUsartReceive(port);
+                usartHardwareInfo.hwTxState = HW_TX_IDLE;
+                usartHardwareInfo.lastByte = 0;
             }
             else{
-                info->hwTxState = HW_TX_SEND_BYTE;
+                usartHardwareInfo.hwTxState = HW_TX_SEND_BYTE;
             }
             transmitByte = 0xE7;
             break;
@@ -110,56 +107,53 @@ uint8_t usartTransmitHardwareHandler(UsartPort port){
 }
 
 void usartReceiveHardwareHandler(UsartPort port,uint8_t rxByte){
-    UsartInfo * info = &usartInfo;
-    switch(info->hwRxState){
+    switch(usartHardwareInfo.hwRxState){
         case HW_RX_IDLE :
             if(rxByte == 0x7E){
-                info->hwRxState = HW_RX_RECEIVED_DELIMITER;
+                usartHardwareInfo.hwRxState = HW_RX_RECEIVED_DELIMITER;
             }
             break;
         case HW_RX_RECEIVED_DELIMITER :
             if(rxByte == 0x81){
-                info->rxCallBack(port,RX_PACKET_START<<8);
-                info->hwRxState = HW_RX_RECEIVE_BYTE;
+                usartHardwareInfo.rxCallBack(port,RX_PACKET_START<<8);
+                usartHardwareInfo.hwRxState = HW_RX_RECEIVE_BYTE;
             }
             else{
-                info->hwRxState = HW_RX_IDLE;
+                usartHardwareInfo.hwRxState = HW_RX_IDLE;
             }
             break;
         case HW_RX_RECEIVE_BYTE :
             if(rxByte == 0x7E){
-                info->hwRxState = HW_RX_RECEIVE_7E_BYTE;
+                usartHardwareInfo.hwRxState = HW_RX_RECEIVE_7E_BYTE;
             }
             else{
-                info->rxCallBack(port,rxByte);
+                usartHardwareInfo.rxCallBack(port,rxByte);
             }
             break;
         case HW_RX_RECEIVE_7E_BYTE :
             if(rxByte == 0x81){
-                info->rxCallBack(port,(RX_PACKET_START<<8));
-                info->hwRxState = HW_RX_RECEIVE_BYTE;
+                usartHardwareInfo.rxCallBack(port,(RX_PACKET_START<<8));
+                usartHardwareInfo.hwRxState = HW_RX_RECEIVE_BYTE;
             }
             else if (rxByte == 0xE7){
-                info->rxCallBack(port,0x7E);
-                info->hwRxState = HW_RX_RECEIVE_BYTE;
+                usartHardwareInfo.rxCallBack(port,0x7E);
+                usartHardwareInfo.hwRxState = HW_RX_RECEIVE_BYTE;
             }
             else{
-                info->hwRxState = HW_RX_IDLE;
+                usartHardwareInfo.hwRxState = HW_RX_IDLE;
             }
             break;
     }
 }
 
 void setHardwareTxLastByte(UsartPort port){
-    UsartInfo * info = &usartInfo;
-    info->lastByte = 1;
+    usartHardwareInfo.lastByte = 1;
 }
 
 void endOfUsartTxHandler(UsartPort port){
-    UsartInfo * info = &usartInfo;
 		UART1_ITConfig(UART1_IT_TC,DISABLE);
     //usartDisableInterrupt(usart,TRANS_COMPLETE);
     //usartDisableTransmission(usart);
     //usartEnableReceiver(usart);
-    info->txTurn = 0;
+    usartHardwareInfo.txTurn = 0;
 }

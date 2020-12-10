@@ -74,7 +74,7 @@ struct UsartDriverInfo {
     UsartPort portName;
 };
 STATIC int findPacketLength(uint8_t* data);
-STATIC int isCorrectAddress(UsartDriverInfo *info);
+STATIC int isCorrectAddress(UsartDriverInfo info);
 STATIC void usartDriverInit(void);
 
 void usartInit(void);

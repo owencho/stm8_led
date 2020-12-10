@@ -6,7 +6,7 @@
 #include "SM_Common.h"
 //This is user define configuration
 #define USART_ADDRESS 0x34
-
+#define MASTER_ADDRESS 0x1
 #define RX_PACKET_START 0x11
 
 typedef enum{
