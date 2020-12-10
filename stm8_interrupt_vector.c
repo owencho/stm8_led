@@ -16,7 +16,7 @@ struct interrupt_vector {
 	*/
 	return;
 }
-
+#include "led_interruptFn.h"
 extern void _stext();     /* startup routine */
 
 struct interrupt_vector const _vectab[] = {
@@ -39,8 +39,8 @@ struct interrupt_vector const _vectab[] = {
 	{0x82, NonHandledInterrupt}, /* irq14 */
 	{0x82, NonHandledInterrupt}, /* irq15 */
 	{0x82, NonHandledInterrupt}, /* irq16 */
-	{0x82, NonHandledInterrupt}, /* irq17 */
-	{0x82, NonHandledInterrupt}, /* irq18 */
+	{0x82, (interrupt_handler_t)usartInterrupt}, /* irq17 */
+	{0x82, (interrupt_handler_t)usartInterrupt}, /* irq18 */
 	{0x82, NonHandledInterrupt}, /* irq19 */
 	{0x82, NonHandledInterrupt}, /* irq20 */
 	{0x82, NonHandledInterrupt}, /* irq21 */

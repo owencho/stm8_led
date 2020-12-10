@@ -9,4 +9,4 @@ Dependencies=
 [Options]
 ActiveProject=stm8_led
 ActiveConfig=Debug
-AddSortedElements=1
+AddSortedElements=0

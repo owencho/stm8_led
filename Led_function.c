@@ -1,7 +1,9 @@
 #include "stm8s.h"
+#define __STDINT__
 #include "led_function.h"
+#include "UsartDriver.h"
 #include <math.h>
-
+#include <string.h>
 double getTemperature(void){
 	uint16_t adcValue;
 	double denomOfTempEquation;
@@ -49,8 +51,15 @@ double getCurrent(void){
 void setLEDIntensity(uint16_t inputValue){
 	double calValue;
 	uint32_t value;
-	calValue = ((inputValue/255.00)*800.00);
+	calValue = ((inputValue/255.00)*7999.00);
 	value= (uint32_t)calValue;
 	TIM1_SetCompare3(value) ;
 }
 
+void configureLEDIntensity(char * data){
+	int intensity;
+	intensity = data[5];
+	
+	setLEDIntensity(intensity);
+	generateFlagAndTransmit(MAIN_CONTROLLER,1,UF_CMD_OK,NULL);
+}

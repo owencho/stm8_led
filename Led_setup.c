@@ -4,12 +4,12 @@ void GPIO_setup(void){
 	GPIO_DeInit(GPIOC);
 	GPIO_Init(GPIOC, (GPIO_PIN_3),
 						GPIO_MODE_OUT_PP_HIGH_FAST);
-	GPIO_Init(GPIOC, (GPIO_PIN_4 ),
-						GPIO_MODE_IN_PU_NO_IT);
+	//GPIO_Init(GPIOC, (GPIO_PIN_4 ),
+	//					GPIO_MODE_IN_PU_NO_IT);
 						
 	GPIO_DeInit(GPIOD);
-	GPIO_Init(GPIOD, (GPIO_PIN_3 ),GPIO_MODE_IN_PU_NO_IT);
-	GPIO_Init(GPIOD, (GPIO_PIN_2 ),GPIO_MODE_IN_PU_NO_IT);
+	GPIO_Init(GPIOD, (GPIO_PIN_3 ),GPIO_MODE_IN_FL_NO_IT);
+	//GPIO_Init(GPIOD, (GPIO_PIN_2 ),GPIO_MODE_IN_PU_NO_IT);
 	GPIO_Init(GPIOD,(GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6)
 						,GPIO_MODE_OUT_PP_HIGH_FAST);
 }
@@ -38,8 +38,8 @@ void TIM1_setup(void){
 	TIM1_DeInit();
 	//Init the period 
 
-	TIM1_TimeBaseInit(TIM1_PRESCALER_1,TIM1_COUNTERMODE_UP,799,0);
-	// 1/frequency, count value 800, frequency=16M/800=20kHZ
+	TIM1_TimeBaseInit(TIM1_PRESCALER_1,TIM1_COUNTERMODE_UP,16000,0);
+	// 1/frequency, count value 800, frequency=16M/8000=2kHZ
 	
 	TIM1_OC3Init(TIM1_OCMODE_PWM1, TIM1_OUTPUTSTATE_ENABLE, 
 								TIM1_OUTPUTNSTATE_ENABLE,0xFFFF, 
@@ -70,6 +70,7 @@ void ADC1_setup(void){
 						ADC1_ALIGN_RIGHT ,  
 						ADC1_SCHMITTTRIG_ALL ,  
 						DISABLE); 
-	
+	ADC1_ExternalTriggerConfig(ADC1_EXTTRIG_GPIO,DISABLE); 
+
 	ADC1_Cmd(ENABLE);
 }

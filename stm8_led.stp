@@ -73,7 +73,8 @@ Int.108=0
 String.6.0=2020,12,4,14,7,8
 String.100.0=$(TargetFName)
 String.101.0=
-String.103.0=.\;stm8sdl\src;stm8sdl\inc;
+String.102.0=
+String.103.0=.\;stm8sdl\src;stm8sdl\inc;commstatemachine\src;commstatemachine\inc;
 
 [Root.Config.0.Settings.2]
 String.2.0=
@@ -82,10 +83,10 @@ String.100.0=STM8S003F3P
 
 [Root.Config.0.Settings.3]
 String.2.0=Compiling $(InputFile)...
-String.3.0=cxstm8 +mods0 -customDebCompat -customOpt -no +split -customC-pp -customLst -l -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
+String.3.0=cxstm8 +mods0 -customDebCompat -customOpt +split -customC-pp -customLst -l -icommstatemachine\inc -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2020,12,6,14,19,33
+String.6.0=2020,12,10,0,25,21
 
 [Root.Config.0.Settings.4]
 String.2.0=Assembling $(InputFile)...
@@ -155,7 +156,7 @@ Int.108=0
 String.6.0=2020,12,4,14,7,8
 String.100.0=$(TargetFName)
 String.101.0=
-String.103.0=.\;stm8sdl\src;stm8sdl\inc;
+String.103.0=.\;stm8sdl\src;stm8sdl\inc;commstatemachine\src;commstatemachine\inc;
 
 [Root.Config.1.Settings.2]
 String.2.0=
@@ -164,7 +165,7 @@ String.100.0=STM8S003F3P
 
 [Root.Config.1.Settings.3]
 String.2.0=Compiling $(InputFile)...
-String.3.0=cxstm8 -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc +mods0 -customC-pp $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
+String.3.0=cxstm8 -icommstatemachine\inc  -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc +mods0 -customC-pp $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
 String.6.0=2020,12,4,14,7,8
@@ -217,7 +218,7 @@ String.6.0=2020,12,4,14,7,8
 [Root.Source Files]
 ElemType=Folder
 PathName=Source Files
-Child=Root.Source Files.led_function.c
+Child=Root.Source Files.Source Files\commstate
 Next=Root.Include Files
 Config.0=Root.Source Files.Config.0
 Config.1=Root.Source Files.Config.1
@@ -242,10 +243,10 @@ Int.1=0
 
 [Root.Source Files.Config.0.Settings.1]
 String.2.0=Compiling $(InputFile)...
-String.3.0=cxstm8 +mods0 -customDebCompat -customOpt -no +split -customC-pp -customLst -l -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
+String.3.0=cxstm8 +mods0 -customDebCompat -customOpt +split -customC-pp -customLst -l -icommstatemachine\inc -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2020,12,6,14,19,33
+String.6.0=2020,12,10,0,25,21
 
 [Root.Source Files.Config.0.Settings.2]
 String.2.0=Assembling $(InputFile)...
@@ -269,7 +270,7 @@ Int.1=0
 
 [Root.Source Files.Config.1.Settings.1]
 String.2.0=Compiling $(InputFile)...
-String.3.0=cxstm8 -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc +mods0 -customC-pp $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
+String.3.0=cxstm8 -icommstatemachine\inc  -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc +mods0 -customC-pp $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
 String.6.0=2020,12,4,14,7,8
@@ -287,6 +288,81 @@ String.3.0=
 String.4.0=
 String.5.0=
 String.6.0=2020,12,4,14,7,8
+
+[Root.Source Files.Source Files\commstate]
+ElemType=Folder
+PathName=Source Files\commstate
+Child=Root.Source Files.Source Files\commstate.led_interruptfn.c
+Next=Root.Source Files.led_function.c
+
+[Root.Source Files.Source Files\commstate.led_interruptfn.c]
+ElemType=File
+PathName=led_interruptfn.c
+Next=Root.Source Files.Source Files\commstate.commstatemachine\src\cmdcompareforavl.c
+
+[Root.Source Files.Source Files\commstate.commstatemachine\src\cmdcompareforavl.c]
+ElemType=File
+PathName=commstatemachine\src\cmdcompareforavl.c
+Next=Root.Source Files.Source Files\commstate.commstatemachine\src\commeventqueue.c
+
+[Root.Source Files.Source Files\commstate.commstatemachine\src\commeventqueue.c]
+ElemType=File
+PathName=commstatemachine\src\commeventqueue.c
+Next=Root.Source Files.Source Files\commstate.commstatemachine\src\commstatemachine.c
+
+[Root.Source Files.Source Files\commstate.commstatemachine\src\commstatemachine.c]
+ElemType=File
+PathName=commstatemachine\src\commstatemachine.c
+Next=Root.Source Files.Source Files\commstate.commstatemachine\src\crc.c
+
+[Root.Source Files.Source Files\commstate.commstatemachine\src\crc.c]
+ElemType=File
+PathName=commstatemachine\src\crc.c
+Next=Root.Source Files.Source Files\commstate.commstatemachine\src\eventcompare.c
+
+[Root.Source Files.Source Files\commstate.commstatemachine\src\eventcompare.c]
+ElemType=File
+PathName=commstatemachine\src\eventcompare.c
+Next=Root.Source Files.Source Files\commstate.commstatemachine\src\eventqueue.c
+
+[Root.Source Files.Source Files\commstate.commstatemachine\src\eventqueue.c]
+ElemType=File
+PathName=commstatemachine\src\eventqueue.c
+Next=Root.Source Files.Source Files\commstate.commstatemachine\src\irq.c
+
+[Root.Source Files.Source Files\commstate.commstatemachine\src\irq.c]
+ElemType=File
+PathName=commstatemachine\src\irq.c
+Next=Root.Source Files.Source Files\commstate.commstatemachine\src\list.c
+
+[Root.Source Files.Source Files\commstate.commstatemachine\src\list.c]
+ElemType=File
+PathName=commstatemachine\src\list.c
+Next=Root.Source Files.Source Files\commstate.commstatemachine\src\listitemcompare.c
+
+[Root.Source Files.Source Files\commstate.commstatemachine\src\listitemcompare.c]
+ElemType=File
+PathName=commstatemachine\src\listitemcompare.c
+Next=Root.Source Files.Source Files\commstate.commstatemachine\src\timereventisr.c
+
+[Root.Source Files.Source Files\commstate.commstatemachine\src\timereventisr.c]
+ElemType=File
+PathName=commstatemachine\src\timereventisr.c
+Next=Root.Source Files.Source Files\commstate.commstatemachine\src\timereventqueue.c
+
+[Root.Source Files.Source Files\commstate.commstatemachine\src\timereventqueue.c]
+ElemType=File
+PathName=commstatemachine\src\timereventqueue.c
+Next=Root.Source Files.Source Files\commstate.commstatemachine\src\usartdriver.c
+
+[Root.Source Files.Source Files\commstate.commstatemachine\src\usartdriver.c]
+ElemType=File
+PathName=commstatemachine\src\usartdriver.c
+Next=Root.Source Files.Source Files\commstate.commstatemachine\src\usarthardware.c
+
+[Root.Source Files.Source Files\commstate.commstatemachine\src\usarthardware.c]
+ElemType=File
+PathName=commstatemachine\src\usarthardware.c
 
 [Root.Source Files.led_function.c]
 ElemType=File
@@ -390,7 +466,7 @@ PathName=stm8sdl\src\stm8s_wwdg.c
 [Root.Include Files]
 ElemType=Folder
 PathName=Include Files
-Child=Root.Include Files.led_function.h
+Child=Root.Include Files.led_interruptfn.h
 Config.0=Root.Include Files.Config.0
 Config.1=Root.Include Files.Config.1
 
@@ -414,10 +490,10 @@ Int.1=0
 
 [Root.Include Files.Config.0.Settings.1]
 String.2.0=Compiling $(InputFile)...
-String.3.0=cxstm8 +mods0 -customDebCompat -customOpt -no +split -customC-pp -customLst -l -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
+String.3.0=cxstm8 +mods0 -customDebCompat -customOpt +split -customC-pp -customLst -l -icommstatemachine\inc -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2020,12,6,14,19,33
+String.6.0=2020,12,10,0,25,21
 
 [Root.Include Files.Config.0.Settings.2]
 String.2.0=Assembling $(InputFile)...
@@ -441,7 +517,7 @@ Int.1=0
 
 [Root.Include Files.Config.1.Settings.1]
 String.2.0=Compiling $(InputFile)...
-String.3.0=cxstm8 -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc +mods0 -customC-pp $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
+String.3.0=cxstm8 -icommstatemachine\inc  -istm8sdl\inc -istm8sdl\libraries\stm8s_stdperiph_driver\inc +mods0 -customC-pp $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
 String.6.0=2020,12,4,14,7,8
@@ -459,6 +535,131 @@ String.3.0=
 String.4.0=
 String.5.0=
 String.6.0=2020,12,4,14,7,8
+
+[Root.Include Files.led_interruptfn.h]
+ElemType=File
+PathName=led_interruptfn.h
+Next=Root.Include Files.Include Files\commstate
+
+[Root.Include Files.Include Files\commstate]
+ElemType=Folder
+PathName=Include Files\commstate
+Child=Root.Include Files.Include Files\commstate.commstatemachine\inc\cmdcompareforavl.h
+Next=Root.Include Files.led_function.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\cmdcompareforavl.h]
+ElemType=File
+PathName=commstatemachine\inc\cmdcompareforavl.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\cmdnode.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\cmdnode.h]
+ElemType=File
+PathName=commstatemachine\inc\cmdnode.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\commeventqueue.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\commeventqueue.h]
+ElemType=File
+PathName=commstatemachine\inc\commeventqueue.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\commstatemachine.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\commstatemachine.h]
+ElemType=File
+PathName=commstatemachine\inc\commstatemachine.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\config.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\config.h]
+ElemType=File
+PathName=commstatemachine\inc\config.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\crc.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\crc.h]
+ElemType=File
+PathName=commstatemachine\inc\crc.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\event.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\event.h]
+ElemType=File
+PathName=commstatemachine\inc\event.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\eventcompare.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\eventcompare.h]
+ElemType=File
+PathName=commstatemachine\inc\eventcompare.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\eventqueue.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\eventqueue.h]
+ElemType=File
+PathName=commstatemachine\inc\eventqueue.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\eventtype.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\eventtype.h]
+ElemType=File
+PathName=commstatemachine\inc\eventtype.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\irq.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\irq.h]
+ElemType=File
+PathName=commstatemachine\inc\irq.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\linkedlistcompare.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\linkedlistcompare.h]
+ElemType=File
+PathName=commstatemachine\inc\linkedlistcompare.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\linkedlistprocessor.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\linkedlistprocessor.h]
+ElemType=File
+PathName=commstatemachine\inc\linkedlistprocessor.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\list.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\list.h]
+ElemType=File
+PathName=commstatemachine\inc\list.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\listitem.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\listitem.h]
+ElemType=File
+PathName=commstatemachine\inc\listitem.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\listitemcompare.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\listitemcompare.h]
+ElemType=File
+PathName=commstatemachine\inc\listitemcompare.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\sm_common.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\sm_common.h]
+ElemType=File
+PathName=commstatemachine\inc\sm_common.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\statemachine.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\statemachine.h]
+ElemType=File
+PathName=commstatemachine\inc\statemachine.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\timerevent.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\timerevent.h]
+ElemType=File
+PathName=commstatemachine\inc\timerevent.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\timereventisr.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\timereventisr.h]
+ElemType=File
+PathName=commstatemachine\inc\timereventisr.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\timereventqueue.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\timereventqueue.h]
+ElemType=File
+PathName=commstatemachine\inc\timereventqueue.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\usartdriver.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\usartdriver.h]
+ElemType=File
+PathName=commstatemachine\inc\usartdriver.h
+Next=Root.Include Files.Include Files\commstate.commstatemachine\inc\usarthardware.h
+
+[Root.Include Files.Include Files\commstate.commstatemachine\inc\usarthardware.h]
+ElemType=File
+PathName=commstatemachine\inc\usarthardware.h
 
 [Root.Include Files.led_function.h]
 ElemType=File
