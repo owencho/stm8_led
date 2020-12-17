@@ -39,19 +39,21 @@ UsartEvent uEvent;
 double testTempValue;
 double testVoltageValue;
 double testCurrentValue;
-char testData[10];
+char testData;
 //ori
 Event * event;
 
 int main(void)
 {
-	enableInterrupts();
+	
 	GPIO_setup();
 	clock_setup();
 	TIM1_setup();
-	UART1_setup();
 	ADC1_setup();
-	usartInit();
+	UART1_setup();
+	//usartInit();
+	/*
+	setLEDIntensity(10);
 	/*
 	setLEDIntensity(10);
 	testTempValue = getTemperature();
@@ -61,17 +63,29 @@ int main(void)
 	GPIO_WriteHigh(GPIOD,GPIO_PIN_4);
 	*/
 	//test
-	sm.callback = (Callback)configureLEDIntensity;
-	uEvent.stateMachineInfo = &sm;
-	testData[5]= 123;
-	uEvent.buffer = (uint8_t*)testData;
-	configureLEDIntensity((Event*)&uEvent);
+	//sm.callback = (Callback)configureLEDIntensity;
+	//uEvent.stateMachineInfo = &sm;
+	//testData[5]= 123;
+	//uEvent.buffer = (uint8_t*)testData;
+	//configureLEDIntensity((Event*)&uEvent);
 	while (1){
+		//UART1_SendData8(123);
+		/*
+		UART1_SendData8(123);
+		GPIO_WriteHigh(GPIOC,GPIO_PIN_7);
+		*/
+		/*
 		if(eventDequeue(&sysQueue,&event))
 			event->stateMachine->callback(event);
 		else if(eventDequeue(&evtQueue,&event))
 			event->stateMachine->callback(event);
-	}
+		*/
+		
+		 if(UART1_GetFlagStatus(UART1_FLAG_RXNE) == TRUE)
+		{
+			testData = UART1_ReceiveData8();
+		}
+		
+}		
 }
-
 

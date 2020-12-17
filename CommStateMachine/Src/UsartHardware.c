@@ -23,7 +23,6 @@ STATIC void initUsartHardwareInfo(UsartPort port){
 
 void usartHardwareInit(void){
 		disableIRQ();
-    //memset(&usartInfo[1],0,sizeof(UsartInfo));
     initUsartHardwareInfo(MAIN_CONTROLLER);
     enableIRQ();
 }
@@ -31,20 +30,18 @@ void usartHardwareInit(void){
 void hardwareUsartTransmit(UsartPort port){
     disableIRQ();
     usartHardwareInfo.txTurn = 1;
-		UART1_ITConfig(UART1_IT_TC,ENABLE); 
-
-    //usartEnableTransmission(usartHardwareInfo.usart);
-    //usartEnableInterrupt(usartHardwareInfo.usart,TRANS_COMPLETE);
-    //usartDisableReceiver(usartHardwareInfo.usart);
+		GPIO_WriteHigh(GPIOC,GPIO_PIN_7);
+		UART1_ITConfig(UART1_IT_RXNE_OR,DISABLE);
+		UART1_ITConfig(UART1_IT_TC,ENABLE);
     enableIRQ();
 }
 
 void hardwareUsartReceive(UsartPort port){
     disableIRQ();
     usartHardwareInfo.txTurn = 0;
+		GPIO_WriteLow(GPIOC,GPIO_PIN_7);
+		UART1_ITConfig(UART1_IT_TC,DISABLE);
 		UART1_ITConfig(UART1_IT_RXNE_OR,ENABLE); 
-    //usartEnableReceiver(usartHardwareInfo.usart);
-    //usartEnableInterrupt(usartHardwareInfo.usart,RXNE_INTERRUPT);
     enableIRQ();
 }
 
@@ -155,5 +152,6 @@ void endOfUsartTxHandler(UsartPort port){
     //usartDisableInterrupt(usart,TRANS_COMPLETE);
     //usartDisableTransmission(usart);
     //usartEnableReceiver(usart);
+		GPIO_WriteLow(GPIOC,GPIO_PIN_7);
     usartHardwareInfo.txTurn = 0;
 }

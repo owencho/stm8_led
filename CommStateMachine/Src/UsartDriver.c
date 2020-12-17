@@ -78,6 +78,7 @@ STATIC void usartDriverInit(void){
 void usartInit(void){
     usartDriverInit();
     usartHardwareInit();
+		hardwareUsartReceive(MAIN_CONTROLLER);
 }
 
 void usartDriverTransmit(UsartPort port,uint8_t rxAddress,int length,uint8_t * txData,UsartEvent * event){
@@ -178,7 +179,6 @@ void usartReceiveHandler(UsartPort port,uint16_t rxByte){
 STATIC void handleRxAddressAndLength(UsartPort port,uint16_t rxByte){
     uint8_t eventByte = rxByte >> 8;
     uint8_t dataByte = rxByte & 0xFF;
-    //UsartEvent * evt = usartDriverInfo.rxUsartEvent;
     uint8_t * staticBuffer = usartDriverInfo.rxStaticBuffer;
 
     if(eventByte == RX_PACKET_START){
@@ -274,7 +274,7 @@ STATIC void handleCRC16WithStaticBuffer(UsartPort port,uint16_t rxByte){
 		*/
     else{
         rxCRC16[1] = dataByte;
-        usartDriverInfo.rxState = RX_WAIT_FOR_MALLOC_BUFFER;
+        usartDriverInfo.rxState = RX_IDLE;
 				generateEventForReceiveComplete(port);
     }
 }/*
@@ -316,11 +316,12 @@ STATIC void generateEventForReceiveComplete(UsartPort port){
 
     if(checkRxPacketCRC(port)){
         usartDriverInfo.rxUsartEvent.type = PACKET_RX_EVENT;
+				findSMInfoAndGenerateEvent(port);
     }
     else{
         usartDriverInfo.rxUsartEvent.type = RX_CRC_ERROR_EVENT;
     }
-    findSMInfoAndGenerateEvent(port);
+    
 }
 
 
