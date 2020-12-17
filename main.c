@@ -51,7 +51,7 @@ int main(void)
 	TIM1_setup();
 	ADC1_setup();
 	UART1_setup();
-	//usartInit();
+	usartInit();
 	/*
 	setLEDIntensity(10);
 	/*
@@ -69,23 +69,21 @@ int main(void)
 	//uEvent.buffer = (uint8_t*)testData;
 	//configureLEDIntensity((Event*)&uEvent);
 	while (1){
-		//UART1_SendData8(123);
+		//UART1_SendData8(170);
 		/*
 		UART1_SendData8(123);
 		GPIO_WriteHigh(GPIOC,GPIO_PIN_7);
 		*/
-		/*
+		
 		if(eventDequeue(&sysQueue,&event))
 			event->stateMachine->callback(event);
 		else if(eventDequeue(&evtQueue,&event))
 			event->stateMachine->callback(event);
+		/*
+		testTempValue = getTemperature();
+
+		testData = UART1_ReceiveData8();
 		*/
-		
-		 if(UART1_GetFlagStatus(UART1_FLAG_RXNE) == TRUE)
-		{
-			testData = UART1_ReceiveData8();
-		}
-		
 }		
 }
 

@@ -6,6 +6,8 @@ void GPIO_setup(void){
 	GPIO_Init(GPIOC, (GPIO_PIN_3),GPIO_MODE_OUT_PP_HIGH_FAST);
 	//TEMP SENSOR
 	GPIO_Init(GPIOC, (GPIO_PIN_4 ),GPIO_MODE_IN_PU_NO_IT);
+	//setting for RS485
+	GPIO_Init(GPIOC, (GPIO_PIN_7),GPIO_MODE_OUT_PP_HIGH_FAST);
 	
 	GPIO_DeInit(GPIOD);
 	//Voltage SENSOR
@@ -18,19 +20,20 @@ void GPIO_setup(void){
 	GPIO_Init(GPIOD, GPIO_PIN_6, GPIO_MODE_IN_PU_NO_IT);
 }
 void clock_setup(void){
+	
 	CLK_DeInit();
 						
 	CLK_HSECmd(DISABLE);
 	CLK_LSICmd(DISABLE);
-	CLK_HSICmd(ENABLE);
-	while(CLK_GetFlagStatus(CLK_FLAG_HSIRDY) == FALSE);
+	CLK_HSICmd(DISABLE);
+	//while(CLK_GetFlagStatus(CLK_FLAG_HSIRDY) == FALSE);
 						
 	CLK_ClockSwitchCmd(ENABLE);
-	CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV8);
+	CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
 	CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1);			
 	CLK_ClockSwitchConfig(CLK_SWITCHMODE_AUTO, CLK_SOURCE_HSI, 
 	DISABLE, CLK_CURRENTCLOCKSTATE_ENABLE);
-						
+			
 	CLK_PeripheralClockConfig(CLK_PERIPHERAL_ADC, ENABLE);
 	CLK_PeripheralClockConfig(CLK_PERIPHERAL_UART1, ENABLE);
 	CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER1, ENABLE);
@@ -67,20 +70,31 @@ void UART1_setup(void){
 						UART1_PARITY_NO, 
 						UART1_SYNCMODE_CLOCK_DISABLE , 		
 						UART1_MODE_TXRX_ENABLE );
+	UART1_WakeUpConfig(UART1_WAKEUP_IDLELINE);
 	UART1_Cmd(ENABLE);
 }
 
 void ADC1_setup(void){               
 	ADC1_DeInit();
+	ADC1_PrescalerConfig  (ADC1_PRESSEL_FCPU_D18);
+	/*
 	ADC1_Init(ADC1_CONVERSIONMODE_SINGLE,  
-						ADC1_CHANNEL_2,  
+						ADC1_CHANNEL_4,  
 						ADC1_PRESSEL_FCPU_D2 ,  
-						ADC1_EXTTRIG_GPIO,  
+						ADC1_EXTTRIG_TIM,  
 						DISABLE,  
 						ADC1_ALIGN_RIGHT ,  
 						ADC1_SCHMITTTRIG_ALL ,  
-						DISABLE); 
+						DISABLE);
+	*/
+	ADC1_ConversionConfig  (ADC1_CONVERSIONMODE_SINGLE ,  
+													ADC1_CHANNEL_3 ,  
+													ADC1_ALIGN_RIGHT); 
+	/*												
+	ADC1_AWDChannelConfig(ADC1_CHANNEL_6,DISABLE);
+	ADC1_SchmittTriggerConfig(ADC1_SCHMITTTRIG_CHANNEL6,DISABLE);
+	ADC1_ScanModeCmd(DISABLE); 	
 	ADC1_ExternalTriggerConfig(ADC1_EXTTRIG_GPIO,DISABLE); 
-
+	*/
 	ADC1_Cmd(ENABLE);
 }

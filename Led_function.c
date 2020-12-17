@@ -1,9 +1,11 @@
 #include "stm8s.h"
 #define __STDINT__
 #include "led_function.h"
+#include "irq.h"
 #include "UsartDriver.h"
 #include <math.h>
 #include <string.h>
+uint8_t ledIntensity;
 double getTemperature(void){
 	uint16_t adcValue;
 	double denomOfTempEquation;
@@ -57,19 +59,20 @@ void setLEDIntensity(uint16_t inputValue){
 }
 LedFunctionState ledIntensityState = LED_FN_IDLE;
 void configureLEDIntensity(Event * event){
-	uint8_t intensity;
 	UsartEvent * usartEvent = (UsartEvent*)event;
 	char * data = usartEvent->buffer;
-
+	disableIRQ();
 	switch(ledIntensityState){
         case LED_FN_IDLE :
-						intensity = data[5];
-						setLEDIntensity(intensity);
+						ledIntensity = data[5];
+						setLEDIntensity(ledIntensity);
 						generateFlagAndTransmit(MAIN_CONTROLLER,MASTER_ADDRESS,UF_CMD_OK,usartEvent);
 						ledIntensityState = LED_FN_REPLY_PACKET;
             break;
         case LED_FN_REPLY_PACKET:
             ledIntensityState = LED_FN_IDLE;
+						setNoMoreUsartEvent();
             break;
     }	
+		enableIRQ();
 }

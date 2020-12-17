@@ -108,4 +108,5 @@ void freeMemForReceiver(Event * event);
 //removeUSartEvent
 void removeTimerEventFromQueue(Event * event);
 void removeAbortEventFromQueue(UsartEvent * evt);
+void setNoMoreUsartEvent(void);
 #endif // USARTDRIVER_H
