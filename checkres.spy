@@ -3,7 +3,7 @@
 ; ** Copyright STMicroelectronics (c) 1999, all rights reserved **
 ;  Level 1
 ;  Date  12/17/20
-;  Time  17:42:47
+;  Time  23:25:10
 ;
-<.\confmenu.cpp:170-17:42:47> 
+<.\confmenu.cpp:170-23:25:10> 
 Error: resource handle has not been restored in .\confmenu.cpp:462
