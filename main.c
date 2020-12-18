@@ -70,6 +70,7 @@ int main(void)
 	//configureLEDIntensity((Event*)&uEvent);
 	while (1){
 		//UART1_SendData8(170);
+		//GPIO_WriteHigh(GPIOC,GPIO_PIN_7);
 		/*
 		UART1_SendData8(123);
 		GPIO_WriteHigh(GPIOC,GPIO_PIN_7);

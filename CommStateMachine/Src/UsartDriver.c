@@ -290,6 +290,9 @@ STATIC void findSMInfoAndGenerateEvent(UsartPort port){
 		usartDriverInfo.rxUsartEvent.stateMachineInfo = infoSM;
     usartDriverInfo.rxUsartEvent.buffer = rxBuffer;
     eventEnqueue(&evtQueue,(Event*)&usartDriverInfo.rxUsartEvent);
+		usartDriverInfo.rxState = RX_ADDRESS_LENGTH;
+		usartDriverInfo.rxCounter = 0;
+		usartDriverInfo.rxLen = 0;
 }
 
 void generateFlagAndTransmit(UsartPort port,uint8_t rxAddress,UsartDriverFlags flags,UsartEvent * event){
