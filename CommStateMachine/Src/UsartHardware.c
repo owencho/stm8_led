@@ -30,26 +30,37 @@ void usartHardwareInit(void){
 void hardwareUsartTransmit(UsartPort port){
     disableIRQ();
     usartHardwareInfo.txTurn = 1;
+		usartHardwareInfo.lastByte = 0 ;
+		usartHardwareInfo.hwTxState = HW_TX_IDLE;
 		GPIO_WriteHigh(GPIOC,GPIO_PIN_7);
+		
+		UART1_ITConfig(UART1_IT_TC,DISABLE);
+		UART1_ITConfig(UART1_IT_RXNE,DISABLE);
+		UART1_ITConfig(UART1_IT_TXE,ENABLE);
 		UART1_ClearITPendingBit(UART1_IT_RXNE);
 		UART1_ClearFlag(UART1_IT_RXNE);
 		UART1_ClearITPendingBit(UART1_IT_TC);
-		UART1_ClearFlag(UART1_IT_TC);		
-		UART1_ITConfig(UART1_IT_RXNE_OR,DISABLE);
-		UART1_ITConfig(UART1_IT_TC,ENABLE);
+		UART1_ClearFlag(UART1_IT_TC);
+		UART1_ClearITPendingBit(UART1_IT_TXE);
+		UART1_ClearFlag(UART1_IT_TXE);
     enableIRQ();
 }
 
 void hardwareUsartReceive(UsartPort port){
     disableIRQ();
     usartHardwareInfo.txTurn = 0;
+		usartHardwareInfo.hwTxState = HW_RX_IDLE;
 		GPIO_WriteLow(GPIOC,GPIO_PIN_7);
+		
+		UART1_ITConfig(UART1_IT_TC,DISABLE);
+		UART1_ITConfig(UART1_IT_TXE,DISABLE);
+		UART1_ITConfig(UART1_IT_RXNE,ENABLE);
 		UART1_ClearITPendingBit(UART1_IT_RXNE);
 		UART1_ClearFlag(UART1_IT_RXNE);
 		UART1_ClearITPendingBit(UART1_IT_TC);
-		UART1_ClearFlag(UART1_IT_TC);		
-		UART1_ITConfig(UART1_IT_TC,DISABLE);
-		UART1_ITConfig(UART1_IT_RXNE_OR,ENABLE);
+		UART1_ClearFlag(UART1_IT_TC);
+		UART1_ClearITPendingBit(UART1_IT_TXE);
+		UART1_ClearFlag(UART1_IT_TXE);
     enableIRQ();
 }
 
@@ -59,23 +70,24 @@ void usartIrqHandler(UsartPort port){
 		disableIRQ();
 		
 		if(usartHardwareInfo.lastByte){
+				UART1_ClearITPendingBit(UART1_IT_TC);
+				UART1_ClearFlag(UART1_IT_TC);
 				usartHardwareInfo.lastByte = 0;
-				hardwareUsartReceive(MAIN_CONTROLLER);
-				//UART1_SendData8(123);
-
+				hardwareUsartReceive(port);
 		}
     else if(usartHardwareInfo.txTurn){
+				UART1_ClearITPendingBit(UART1_IT_TXE);
+				UART1_ClearFlag(UART1_IT_TXE);
         txByte = usartTransmitHardwareHandler(port);
-        //UART1_SendData8(txByte);
+        UART1_SendData8(txByte);
     }
     else{
+				UART1_ClearITPendingBit(UART1_IT_RXNE);
+				UART1_ClearFlag(UART1_IT_RXNE);
         rxByte = UART1_ReceiveData8();
         usartReceiveHardwareHandler(port,rxByte);
     }
-		UART1_ClearITPendingBit(UART1_IT_RXNE);
-		UART1_ClearFlag(UART1_IT_RXNE);
-		UART1_ClearITPendingBit(UART1_IT_TC);
-		UART1_ClearFlag(UART1_IT_TC);
+
 		enableIRQ();
 }
 
@@ -86,37 +98,34 @@ uint8_t usartTransmitHardwareHandler(UsartPort port){
         case HW_TX_IDLE :
             usartHardwareInfo.hwTxState = HW_TX_SEND_DELIMITER;
             transmitByte = 0x7E;
-						UART1_SendData8(0x7E);
             break;
         case HW_TX_SEND_DELIMITER :
             usartHardwareInfo.hwTxState = HW_TX_SEND_BYTE;
             transmitByte = 0x81;
-						UART1_SendData8(0x81);
             break;
-						
+				
         case HW_TX_SEND_BYTE :
             transmitByte = usartHardwareInfo.txCallBack(port);
-						UART1_SendData8(transmitByte);
             if(transmitByte == 0x7E){
                 usartHardwareInfo.hwTxState = HW_TX_SEND_7E_BYTE;
             }
             else if(usartHardwareInfo.lastByte){
+								endOfUsartTxHandler(port);
                 usartHardwareInfo.hwTxState = HW_TX_IDLE;
             }
             break;
         case HW_TX_SEND_7E_BYTE :
             if(usartHardwareInfo.lastByte){
+								endOfUsartTxHandler(port);
                 usartHardwareInfo.hwTxState = HW_TX_IDLE;
-
             }
             else{
                 usartHardwareInfo.hwTxState = HW_TX_SEND_BYTE;
             }
-						UART1_SendData8(0xE7);
+						transmitByte == 0xE7;
             break;
 						
     }
-		//UART1_SendData8(transmitByte);
     return transmitByte;
 }
 
@@ -165,8 +174,17 @@ void setHardwareTxLastByte(UsartPort port){
 }
 
 void endOfUsartTxHandler(UsartPort port){
-		UART1_ITConfig(UART1_IT_TC,DISABLE);
-		hardwareUsartReceive(MAIN_CONTROLLER);
-		GPIO_WriteLow(GPIOC,GPIO_PIN_7);
-    usartHardwareInfo.txTurn = 0;
+		UART1_ClearITPendingBit(UART1_IT_RXNE);
+		UART1_ClearFlag(UART1_IT_RXNE);
+		UART1_ClearITPendingBit(UART1_IT_TC);
+		UART1_ClearFlag(UART1_IT_TC);
+		UART1_ClearITPendingBit(UART1_IT_TXE);
+		UART1_ClearFlag(UART1_IT_TXE);
+		
+		UART1_ITConfig(UART1_IT_TC,ENABLE);
+		UART1_ITConfig(UART1_IT_RXNE,DISABLE);
+		UART1_ITConfig(UART1_IT_TXE,DISABLE);
+
+		//GPIO_WriteLow(GPIOC,GPIO_PIN_7);
+    //usartHardwareInfo.txTurn = 0;
 }

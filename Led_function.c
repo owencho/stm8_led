@@ -60,7 +60,7 @@ void setLEDIntensity(uint16_t inputValue){
 
 
 LedFunctionState ledIntensityState = LED_FN_IDLE;
-uint8_t ledIntensityData[2];
+uint8_t ledIntensityData[5];
 void configureLEDIntensity(Event * event){
 	UsartEvent * usartEvent = (UsartEvent*)event;
 	char * data = usartEvent->buffer;
@@ -69,9 +69,9 @@ void configureLEDIntensity(Event * event){
         case LED_FN_IDLE :
 						ledIntensity = data[5];
 						setLEDIntensity(ledIntensity);
-						data[0] = 123; //command
+						ledIntensityData[0] = 0xAA; //command
 						usartDriverTransmit(MAIN_CONTROLLER,MASTER_ADDRESS
-																,3,ledIntensityData,usartEvent);
+																,1,ledIntensityData,usartEvent);
 						ledIntensityState = LED_FN_REPLY_PACKET;
             break;
         case LED_FN_REPLY_PACKET:

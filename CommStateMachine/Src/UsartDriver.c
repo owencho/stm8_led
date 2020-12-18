@@ -85,6 +85,7 @@ void usartDriverTransmit(UsartPort port,uint8_t rxAddress,int length,uint8_t * t
 		disableIRQ();
 
     if(!hasRequestedTxPacket(usartDriverInfo)){
+				usartDriverInfo.txCounter = 0;
         usartDriverInfo.txLen =length+1;
         usartDriverInfo.receiverAddress = rxAddress;
         usartDriverInfo.txUsartEvent = event;
@@ -136,7 +137,7 @@ uint8_t usartTransmissionHandler(UsartPort port){
             transmitByte = txCRC16[usartDriverInfo.txCounter];
             usartDriverInfo.txCounter ++;
             if(usartDriverInfo.txCounter > 1){
-								setHardwareTxLastByte(port);
+								//setHardwareTxLastByte(port);
 								usartDriverInfo.txCounter = 0;
                 usartDriverInfo.requestTxPacket = 0;
                 usartDriverInfo.txState = TX_IDLE;
