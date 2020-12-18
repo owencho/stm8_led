@@ -63,33 +63,24 @@ void hardwareUsartReceive(UsartPort port){
 		UART1_ClearFlag(UART1_IT_TXE);
     enableIRQ();
 }
-volatile int lastCount = 0;
 void usartIrqHandler(UsartPort port){
     char rxByte;
     uint8_t txByte;
 		disableIRQ();
 		
-		if(usartHardwareInfo.lastByte){
-				UART1_ClearITPendingBit(UART1_IT_TC);
-				UART1_ClearFlag(UART1_IT_TC);
-				UART1_ClearITPendingBit(UART1_IT_TXE);
-				UART1_ClearFlag(UART1_IT_TXE);
-				if(lastCount==4){
+
+    if(usartHardwareInfo.txTurn){
+				if(usartHardwareInfo.lastByte){
+					endOfUsartTxHandler(port);
 					usartHardwareInfo.lastByte = 0;
-					UART1_ITConfig(UART1_IT_TC,DISABLE);
-					UART1_ITConfig(UART1_IT_TXE,DISABLE);
-					UART1_ITConfig(UART1_IT_RXNE,ENABLE);
-					lastCount = 0;
+					usartHardwareInfo.txTurn = 0 ;
 				}
 				else{
-					lastCount++;
+					UART1_ClearITPendingBit(UART1_IT_TXE);
+					UART1_ClearFlag(UART1_IT_TXE);
+					txByte = usartTransmitHardwareHandler(port);
+					UART1_SendData8(txByte);
 				}
-		}
-    else if(usartHardwareInfo.txTurn){
-				UART1_ClearITPendingBit(UART1_IT_TXE);
-				UART1_ClearFlag(UART1_IT_TXE);
-        txByte = usartTransmitHardwareHandler(port);
-        UART1_SendData8(txByte);
     }
     else{
 				UART1_ClearITPendingBit(UART1_IT_RXNE);
