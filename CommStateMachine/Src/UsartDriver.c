@@ -27,7 +27,7 @@ volatile UsartDriverInfo usartDriverInfo;
 
 #define hasRequestedTxPacket(info) ((info).requestTxPacket)
 #define hasRequestedRxPacket(info) ((info).requestRxPacket)
-#define isLastTxByte(info) ((info.txLen) < (info.txCounter)+2)
+#define isLastTxByte(info) ((info.txLen) < (info.txCounter)+1)
 #define isLastRxByte(info) ((info.rxLen) <= (info.rxCounter)-PAYLOAD_OFFSET)
 #define getCommandByte(info) (info.rxMallocBuffer[CMD_OFFSET])
 #define getSenderAddress(info) (info.rxMallocBuffer[SENDER_ADDRESS_OFFSET])
@@ -73,6 +73,8 @@ STATIC void usartDriverInit(void){
     freeMemInfo.callback = (Callback)freeMemForReceiver;
 		
 		setIntensityInfo.callback = (Callback)configureLEDIntensity;
+		setLEDInfo.callback = (Callback)configureLEDPower;
+		setCutOffTempInfo.callback = (Callback)configureLEDCutOffTemp;
 }
 
 void usartInit(void){
@@ -90,6 +92,7 @@ void usartDriverTransmit(UsartPort port,uint8_t rxAddress,int length,uint8_t * t
         usartDriverInfo.receiverAddress = rxAddress;
         usartDriverInfo.txUsartEvent = event;
         usartDriverInfo.txBuffer = txData;
+				usartDriverInfo.txState = TX_IDLE;
         generateCRC16forTxPacket(port);
         usartDriverInfo.requestTxPacket = 1;
         hardwareUsartTransmit(port);
@@ -102,7 +105,7 @@ uint8_t usartTransmissionHandler(UsartPort port){
     uint8_t * txCRC16 = usartDriverInfo.txCRC16;
     UsartEvent * event = usartDriverInfo.txUsartEvent;
     uint8_t transmitByte;
-		disableIRQ();
+		//disableIRQ();
     switch(usartDriverInfo.txState){
         case TX_IDLE :
             transmitByte = usartDriverInfo.receiverAddress;
@@ -137,7 +140,6 @@ uint8_t usartTransmissionHandler(UsartPort port){
             transmitByte = txCRC16[usartDriverInfo.txCounter];
             usartDriverInfo.txCounter ++;
             if(usartDriverInfo.txCounter > 1){
-								//setHardwareTxLastByte(port);
 								usartDriverInfo.txCounter = 0;
                 usartDriverInfo.requestTxPacket = 0;
                 usartDriverInfo.txState = TX_IDLE;
@@ -147,7 +149,7 @@ uint8_t usartTransmissionHandler(UsartPort port){
             }
             break;
     }
-		enableIRQ();
+		//enableIRQ();
     return transmitByte;
 }
 
@@ -260,11 +262,15 @@ STATIC void generateEventForReceiveComplete(UsartPort port){
 
     if(checkRxPacketCRC(port)){
         usartDriverInfo.rxUsartEvent.type = PACKET_RX_EVENT;
+				findSMInfoAndGenerateEvent(port);
     }
     else{
         usartDriverInfo.rxUsartEvent.type = RX_CRC_ERROR_EVENT;
+				usartDriverInfo.rxState = RX_IDLE;
+				usartDriverInfo.rxCounter = 0;
+				usartDriverInfo.rxLen = 0;
     }
-		findSMInfoAndGenerateEvent(port);
+		
     
 }
 
@@ -275,8 +281,7 @@ STATIC void findSMInfoAndGenerateEvent(UsartPort port){
 		char command = rxBuffer[4];
 		usartDriverInfo.isEventOccupied = 1;
 		switch(command){
-		
-		case 0 : //setLED
+		case 0 : infoSM = &setLEDInfo;
 						 break;
 		case 1 : infoSM = &setIntensityInfo;
 						 break;
@@ -284,13 +289,13 @@ STATIC void findSMInfoAndGenerateEvent(UsartPort port){
 						 break;
 		case 3 : //getTemp
 						 break;
-		case 4 : //setCutOffTemp
+		case 4 : infoSM = &setCutOffTempInfo;
 						 break;
 		}
 		usartDriverInfo.rxUsartEvent.stateMachineInfo = infoSM;
     usartDriverInfo.rxUsartEvent.buffer = rxBuffer;
     eventEnqueue(&evtQueue,(Event*)&usartDriverInfo.rxUsartEvent);
-		usartDriverInfo.rxState = RX_ADDRESS_LENGTH;
+		usartDriverInfo.rxState = RX_IDLE;
 		usartDriverInfo.rxCounter = 0;
 		usartDriverInfo.rxLen = 0;
 }

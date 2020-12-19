@@ -29,7 +29,7 @@ FormatParameters=0
 ActiveTab=2
 [DebugState_v1-Debug.AddOn.St7PeripheralRegister]
 DisplayFormat=1
-ShowPeriphAddress=1
+ShowPeriphAddress=0
 ShowRegisterAddress=1
 [DebugState_v1-Debug.AddOn.St7McuIcdConf]
 McuName=STM8S003F3

@@ -5,7 +5,10 @@
 #include "UsartDriver.h"
 #include <math.h>
 #include <string.h>
-uint8_t ledIntensity;
+
+uint8_t ledIntensity = 0;
+uint8_t ledPower = 0;
+volatile uint8_t cutOffTemp;
 double getTemperature(void){
 	uint16_t adcValue;
 	double denomOfTempEquation;
@@ -58,6 +61,15 @@ void setLEDIntensity(uint16_t inputValue){
 	TIM1_SetCompare3(value) ;
 }
 
+void setLEDPower(uint8_t inputValue){
+	if(inputValue == 1){
+		setLEDIntensity(ledIntensity);
+	}
+	else if (inputValue ==0){
+		setLEDIntensity(0);
+	}
+}
+
 
 LedFunctionState ledIntensityState = LED_FN_IDLE;
 uint8_t ledIntensityData[5];
@@ -68,15 +80,61 @@ void configureLEDIntensity(Event * event){
 	switch(ledIntensityState){
         case LED_FN_IDLE :
 						ledIntensity = data[5];
-						setLEDIntensity(ledIntensity);
-						ledIntensityData[0] = 0xAA; //command
+						if(ledPower==1){
+							setLEDIntensity(ledIntensity);
+						}	
+						ledIntensityData[0] = 1; //command
 						usartDriverTransmit(MAIN_CONTROLLER,MASTER_ADDRESS
 																,1,ledIntensityData,usartEvent);
 						ledIntensityState = LED_FN_REPLY_PACKET;
             break;
         case LED_FN_REPLY_PACKET:
             ledIntensityState = LED_FN_IDLE;
-						hardwareUsartReceive(MAIN_CONTROLLER);
+						setNoMoreUsartEvent();
+            break;
+    }	
+		enableIRQ();
+}
+
+LedFunctionState ledPowerState = LED_FN_IDLE;
+uint8_t ledPowerData[5];
+void configureLEDPower(Event * event){
+	UsartEvent * usartEvent = (UsartEvent*)event;
+	char * data = usartEvent->buffer;
+	disableIRQ();
+	switch(ledPowerState){
+        case LED_FN_IDLE :
+						ledPower = data[5];
+						setLEDPower(ledPower);
+						ledPowerData[0] = 0; //command
+						usartDriverTransmit(MAIN_CONTROLLER,MASTER_ADDRESS
+																,1,ledPowerData,usartEvent);
+						ledPowerState = LED_FN_REPLY_PACKET;
+            break;
+        case LED_FN_REPLY_PACKET:
+            ledPowerState = LED_FN_IDLE;
+						setNoMoreUsartEvent();
+            break;
+    }	
+		enableIRQ();
+}
+
+LedFunctionState ledCutOffState = LED_FN_IDLE;
+uint8_t cutOffData[5];
+void configureLEDCutOffTemp(Event * event){
+	UsartEvent * usartEvent = (UsartEvent*)event;
+	char * data = usartEvent->buffer;
+	disableIRQ();
+	switch(ledCutOffState){
+        case LED_FN_IDLE :
+						cutOffTemp = data[5];
+						cutOffData[0] = 4; //command
+						usartDriverTransmit(MAIN_CONTROLLER,MASTER_ADDRESS
+																,1,cutOffData,usartEvent);
+						ledCutOffState = LED_FN_REPLY_PACKET;
+            break;
+        case LED_FN_REPLY_PACKET:
+            ledCutOffState = LED_FN_IDLE;
 						setNoMoreUsartEvent();
             break;
     }	
