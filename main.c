@@ -45,13 +45,15 @@ Event * event;
 
 int main(void)
 {
-	
+	disableIRQ();
 	GPIO_setup();
 	clock_setup();
 	TIM1_setup();
 	ADC1_setup();
 	UART1_setup();
+	TIM2_setup();
 	usartInit();
+	enableIRQ();
 	/*
 	setLEDIntensity(10);
 	/*

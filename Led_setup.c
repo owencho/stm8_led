@@ -40,7 +40,7 @@ void clock_setup(void){
 	CLK_PeripheralClockConfig(CLK_PERIPHERAL_I2C, DISABLE);
 	CLK_PeripheralClockConfig(CLK_PERIPHERAL_SPI, DISABLE);
 	CLK_PeripheralClockConfig(CLK_PERIPHERAL_AWU, DISABLE);
-	CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER2, DISABLE);
+	CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER2, ENABLE);
 	CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER4, DISABLE);
 }
 
@@ -62,6 +62,15 @@ void TIM1_setup(void){
 	TIM1_CtrlPWMOutputs(ENABLE);
 }
 
+void TIM2_setup(void){               
+	TIM2_DeInit();
+	//Init the period 
+	//1 sec delay
+	TIM2_TimeBaseInit(TIM2_PRESCALER_1024,15625);
+	TIM2_ITConfig(TIM2_IT_UPDATE,ENABLE);
+	TIM2_Cmd(ENABLE);
+}
+
 void UART1_setup(void){               
 	UART1_DeInit();
 	UART1_Init(9600, 
@@ -81,24 +90,8 @@ void UART1_setup(void){
 void ADC1_setup(void){               
 	ADC1_DeInit();
 	ADC1_PrescalerConfig  (ADC1_PRESSEL_FCPU_D18);
-	/*
-	ADC1_Init(ADC1_CONVERSIONMODE_SINGLE,  
-						ADC1_CHANNEL_4,  
-						ADC1_PRESSEL_FCPU_D2 ,  
-						ADC1_EXTTRIG_TIM,  
-						DISABLE,  
-						ADC1_ALIGN_RIGHT ,  
-						ADC1_SCHMITTTRIG_ALL ,  
-						DISABLE);
-	*/
 	ADC1_ConversionConfig  (ADC1_CONVERSIONMODE_SINGLE ,  
 													ADC1_CHANNEL_3 ,  
 													ADC1_ALIGN_RIGHT); 
-	/*												
-	ADC1_AWDChannelConfig(ADC1_CHANNEL_6,DISABLE);
-	ADC1_SchmittTriggerConfig(ADC1_SCHMITTTRIG_CHANNEL6,DISABLE);
-	ADC1_ScanModeCmd(DISABLE); 	
-	ADC1_ExternalTriggerConfig(ADC1_EXTTRIG_GPIO,DISABLE); 
-	*/
 	ADC1_Cmd(ENABLE);
 }

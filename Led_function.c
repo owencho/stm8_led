@@ -8,7 +8,8 @@
 
 uint8_t ledIntensity = 0;
 uint8_t ledPower = 0;
-volatile uint8_t cutOffTemp;
+volatile uint8_t cutOffTemp = 110;
+volatile uint8_t isLEDCutOff = 0;
 double getTemperature(void){
 	uint16_t adcValue;
 	double denomOfTempEquation;
@@ -64,6 +65,7 @@ void setLEDIntensity(uint16_t inputValue){
 void setLEDPower(uint8_t inputValue){
 	if(inputValue == 1){
 		setLEDIntensity(ledIntensity);
+		isLEDCutOff = 0;
 	}
 	else if (inputValue ==0){
 		setLEDIntensity(0);
@@ -87,20 +89,8 @@ void configureLEDIntensity(Event * event){
 						ledIntensityData[0] = 1; //command
 						usartDriverTransmit(MAIN_CONTROLLER,MASTER_ADDRESS
 																,1,ledIntensityData,usartEvent);
-						ledIntensityState = LED_FN_RESENT_PACKET;
+						ledIntensityState = LED_FN_REPLY_PACKET;
             break;
-				case LED_FN_RESENT_PACKET:
-						if(resentCounter !=0){
-						resentCounter++;
-						ledIntensityData[0] = 1; //command
-						usartDriverTransmit(MAIN_CONTROLLER,MASTER_ADDRESS
-										,1,ledIntensityData,usartEvent);
-						}
-						else{
-							resentCounter = 0;
-							ledIntensityState = LED_FN_REPLY_PACKET;
-						}
-						break;		
         case LED_FN_REPLY_PACKET:
             ledIntensityState = LED_FN_IDLE;
 						setNoMoreUsartEvent();
