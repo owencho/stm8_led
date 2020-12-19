@@ -80,7 +80,7 @@ void configureLEDIntensity(Event * event){
 	disableIRQ();
 	switch(ledIntensityState){
         case LED_FN_IDLE :
-						ledIntensity = data[5];
+						ledIntensity = data[DATA_OFFSET];
 						if(ledPower==1){
 							setLEDIntensity(ledIntensity);
 						}	
@@ -117,7 +117,7 @@ void configureLEDPower(Event * event){
 	disableIRQ();
 	switch(ledPowerState){
         case LED_FN_IDLE :
-						ledPower = data[5];
+						ledPower = data[DATA_OFFSET];
 						setLEDPower(ledPower);
 						ledPowerData[0] = 0xAA; //command
 						usartDriverTransmit(MAIN_CONTROLLER,MASTER_ADDRESS
@@ -140,7 +140,7 @@ void configureLEDCutOffTemp(Event * event){
 	disableIRQ();
 	switch(ledCutOffState){
         case LED_FN_IDLE :
-						cutOffTemp = data[5];
+						cutOffTemp = data[DATA_OFFSET];
 						cutOffData[0] = 4; //command
 						usartDriverTransmit(MAIN_CONTROLLER,MASTER_ADDRESS
 																,1,cutOffData,usartEvent);
