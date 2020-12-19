@@ -42,7 +42,7 @@ double testCurrentValue;
 char testData[10];
 //ori
 Event * event;
-
+uint8_t sizeFloat;
 int main(void)
 {
 	disableIRQ();
@@ -53,6 +53,7 @@ int main(void)
 	UART1_setup();
 	TIM2_setup();
 	usartInit();
+	sizeFloat = sizeof(float);
 	enableIRQ();
 	/*
 	setLEDIntensity(10);

@@ -10,6 +10,29 @@ uint8_t ledIntensity = 0;
 uint8_t ledPower = 0;
 volatile uint8_t cutOffTemp = 110;
 volatile uint8_t isLEDCutOff = 0;
+
+void disableAutoCutOffTemp(void){
+	TIM2_ITConfig(TIM2_IT_UPDATE,DISABLE);
+	ADC1_ITConfig(ADC1_IT_EOCIE ,DISABLE);
+	ADC1_ClearFlag(ADC1_FLAG_EOC);
+	ADC1_ClearITPendingBit(ADC1_IT_EOC);
+	TIM2_ClearFlag(TIM2_FLAG_UPDATE);
+	TIM2_ClearITPendingBit(TIM2_IT_UPDATE);
+}
+
+void enableAutoCutOffTemp(void){
+	ADC1_ClearFlag(ADC1_FLAG_EOC);
+	ADC1_ClearITPendingBit(ADC1_IT_EOC);
+	TIM2_ClearFlag(TIM2_FLAG_UPDATE);
+	TIM2_ClearITPendingBit(TIM2_IT_UPDATE);
+	TIM2_ITConfig(TIM2_IT_UPDATE,ENABLE);
+	ADC1_ITConfig(ADC1_IT_EOCIE ,ENABLE);
+	ADC1_ConversionConfig  (ADC1_CONVERSIONMODE_SINGLE ,  
+													ADC1_CHANNEL_2 ,  
+													ADC1_ALIGN_RIGHT); 
+	ADC1_StartConversion();
+
+}	
 double getTemperature(void){
 	uint16_t adcValue;
 	double denomOfTempEquation;
@@ -72,6 +95,32 @@ void setLEDPower(uint8_t inputValue){
 	}
 }
 
+LedFunctionState getTempState = LED_FN_IDLE;
+void getTemperatureSM(Event * event){
+	uint8_t getTempData[8];
+	UsartEvent * usartEvent = (UsartEvent*)event;
+	char * data = usartEvent->buffer;
+	float tempValue;
+	disableIRQ();
+	switch(getTempState){
+        case LED_FN_IDLE :
+						disableAutoCutOffTemp();
+						tempValue = getTemperature();
+						enableAutoCutOffTemp();
+						getTempData[0] = 1; //command
+						getTempData[1] = isLEDCutOff; //is LED cut off
+						*(float*)getTempData[2] = tempValue;
+						usartDriverTransmit(MAIN_CONTROLLER,MASTER_ADDRESS
+																,8,getTempData,usartEvent);
+						getTempState = LED_FN_REPLY_PACKET;
+            break;
+        case LED_FN_REPLY_PACKET:
+            getTempState = LED_FN_IDLE;
+						setNoMoreUsartEvent();
+            break;
+    }	
+		enableIRQ();
+}
 
 LedFunctionState ledIntensityState = LED_FN_IDLE;
 volatile uint8_t ledIntensityData[5];
