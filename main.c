@@ -39,7 +39,7 @@ UsartEvent uEvent;
 double testTempValue;
 double testVoltageValue;
 double testCurrentValue;
-char testData;
+char testData[10];
 //ori
 Event * event;
 
@@ -63,19 +63,22 @@ int main(void)
 	GPIO_WriteHigh(GPIOD,GPIO_PIN_4);
 	*/
 	//test
-	//sm.callback = (Callback)configureLEDIntensity;
-	//uEvent.stateMachineInfo = &sm;
-	//testData[5]= 123;
-	//uEvent.buffer = (uint8_t*)testData;
-	//configureLEDIntensity((Event*)&uEvent);
+	/*
+	sm.callback = (Callback)configureLEDIntensity;
+	uEvent.stateMachineInfo = &sm;
+	testData[5]= 123;
+	uEvent.buffer = (uint8_t*)testData;
+	configureLEDIntensity((Event*)&uEvent);
+	*/
 	while (1){
+		//GPIO_WriteHigh(GPIOC,GPIO_PIN_7);
 		//UART1_SendData8(170);
 		//GPIO_WriteHigh(GPIOC,GPIO_PIN_7);
 		/*
 		UART1_SendData8(123);
 		GPIO_WriteHigh(GPIOC,GPIO_PIN_7);
 		*/
-		
+		//configureLEDIntensity((Event*)&uEvent);
 		if(eventDequeue(&sysQueue,&event))
 			event->stateMachine->callback(event);
 		else if(eventDequeue(&evtQueue,&event))

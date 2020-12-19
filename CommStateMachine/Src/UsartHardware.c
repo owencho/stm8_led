@@ -34,16 +34,15 @@ void hardwareUsartTransmit(UsartPort port){
 		usartHardwareInfo.hwTxState = HW_TX_IDLE;
 		GPIO_WriteHigh(GPIOC,GPIO_PIN_7);
 		
+		UART1_ITConfig(UART1_IT_TC,DISABLE);
+		UART1_ITConfig(UART1_IT_RXNE,DISABLE);
+		UART1_ITConfig(UART1_IT_TXE,ENABLE);
 		UART1_ClearITPendingBit(UART1_IT_RXNE);
 		UART1_ClearFlag(UART1_IT_RXNE);
 		UART1_ClearITPendingBit(UART1_IT_TC);
 		UART1_ClearFlag(UART1_IT_TC);
-		UART1_ITConfig(UART1_IT_TC,DISABLE);
-		UART1_ITConfig(UART1_IT_RXNE,DISABLE);
-		UART1_ITConfig(UART1_IT_TXE,ENABLE);
-
-		//UART1_ClearITPendingBit(UART1_IT_TXE);
-		//UART1_ClearFlag(UART1_IT_TXE);
+		UART1_ClearITPendingBit(UART1_IT_TXE);
+		UART1_ClearFlag(UART1_IT_TXE);
     enableIRQ();
 }
 
@@ -53,15 +52,15 @@ void hardwareUsartReceive(UsartPort port){
 		usartHardwareInfo.hwTxState = HW_RX_IDLE;
 		GPIO_WriteLow(GPIOC,GPIO_PIN_7);
 		
+		UART1_ITConfig(UART1_IT_TC,DISABLE);
+		UART1_ITConfig(UART1_IT_TXE,DISABLE);
+		UART1_ITConfig(UART1_IT_RXNE,ENABLE);
 		UART1_ClearITPendingBit(UART1_IT_RXNE);
 		UART1_ClearFlag(UART1_IT_RXNE);
 		UART1_ClearITPendingBit(UART1_IT_TC);
 		UART1_ClearFlag(UART1_IT_TC);
 		UART1_ClearITPendingBit(UART1_IT_TXE);
 		UART1_ClearFlag(UART1_IT_TXE);
-		UART1_ITConfig(UART1_IT_TC,DISABLE);
-		UART1_ITConfig(UART1_IT_TXE,DISABLE);
-		UART1_ITConfig(UART1_IT_RXNE,ENABLE);
 
     enableIRQ();
 }
@@ -81,10 +80,11 @@ void usartIrqHandler(UsartPort port){
 					}					
 				}
 				else{
-					txByte = usartTransmitHardwareHandler(port);
-					UART1_SendData8(txByte);
 					UART1_ClearITPendingBit(UART1_IT_TXE);
 					UART1_ClearFlag(UART1_IT_TXE);
+					txByte = usartTransmitHardwareHandler(port);
+					UART1_SendData8(txByte);
+
 				}
     }
     else{
@@ -99,7 +99,7 @@ void usartIrqHandler(UsartPort port){
 
 uint8_t usartTransmitHardwareHandler(UsartPort port){
     uint8_t transmitByte;
-		
+		disableIRQ();
     switch(usartHardwareInfo.hwTxState){
         case HW_TX_IDLE :
             usartHardwareInfo.hwTxState = HW_TX_SEND_DELIMITER;
@@ -115,12 +115,14 @@ uint8_t usartTransmitHardwareHandler(UsartPort port){
             if(transmitByte == 0x7E){
                 usartHardwareInfo.hwTxState = HW_TX_SEND_7E_BYTE;
             }
+						
             else if(usartHardwareInfo.lastByte){
 								endOfUsartTxHandler(port);
                 usartHardwareInfo.hwTxState = HW_TX_IDLE;
             }
-            break;
+						
         case HW_TX_SEND_7E_BYTE :
+						
             if(usartHardwareInfo.lastByte){
 								endOfUsartTxHandler(port);
                 usartHardwareInfo.hwTxState = HW_TX_IDLE;
@@ -130,7 +132,7 @@ uint8_t usartTransmitHardwareHandler(UsartPort port){
             }
 						transmitByte == 0xE7;
             break;
-						
+					
     }
     return transmitByte;
 }

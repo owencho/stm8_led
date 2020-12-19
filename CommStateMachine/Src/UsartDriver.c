@@ -27,7 +27,7 @@ volatile UsartDriverInfo usartDriverInfo;
 
 #define hasRequestedTxPacket(info) ((info).requestTxPacket)
 #define hasRequestedRxPacket(info) ((info).requestRxPacket)
-#define isLastTxByte(info) ((info.txLen) < (info.txCounter)+1)
+#define isLastTxByte(info) ((info.txLen) < (info.txCounter)+2)
 #define isLastRxByte(info) ((info.rxLen) <= (info.rxCounter)-PAYLOAD_OFFSET)
 #define getCommandByte(info) (info.rxMallocBuffer[CMD_OFFSET])
 #define getSenderAddress(info) (info.rxMallocBuffer[SENDER_ADDRESS_OFFSET])
@@ -105,7 +105,7 @@ uint8_t usartTransmissionHandler(UsartPort port){
     uint8_t * txCRC16 = usartDriverInfo.txCRC16;
     UsartEvent * event = usartDriverInfo.txUsartEvent;
     uint8_t transmitByte;
-		//disableIRQ();
+		disableIRQ();
     switch(usartDriverInfo.txState){
         case TX_IDLE :
             transmitByte = usartDriverInfo.receiverAddress;
@@ -127,14 +127,18 @@ uint8_t usartTransmissionHandler(UsartPort port){
             transmitByte = txBuffer[usartDriverInfo.txCounter];
             usartDriverInfo.txCounter ++;
             usartDriverInfo.txState = TX_SEND_BYTE;
+						if(isLastTxByte(usartDriverInfo)){
+							usartDriverInfo.txCounter = 0;
+							usartDriverInfo.txState = TX_SEND_CRC16;
+						}
             break;
         case TX_SEND_BYTE:
             transmitByte = txBuffer[usartDriverInfo.txCounter];
             usartDriverInfo.txCounter ++;
-            if(isLastTxByte(usartDriverInfo)){
-                usartDriverInfo.txCounter = 0;
-                usartDriverInfo.txState = TX_SEND_CRC16;
-            }
+						if(isLastTxByte(usartDriverInfo)){
+							usartDriverInfo.txCounter = 0;
+							usartDriverInfo.txState = TX_SEND_CRC16;
+						}
             break;
         case TX_SEND_CRC16:
             transmitByte = txCRC16[usartDriverInfo.txCounter];
@@ -149,7 +153,7 @@ uint8_t usartTransmissionHandler(UsartPort port){
             }
             break;
     }
-		//enableIRQ();
+		enableIRQ();
     return transmitByte;
 }
 

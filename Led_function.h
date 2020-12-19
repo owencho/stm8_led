@@ -11,6 +11,7 @@ void configureLEDPower(Event * event);
 void configureLEDCutOffTemp(Event * event);
 typedef enum{
 	LED_FN_IDLE,
+	LED_FN_RESENT_PACKET,
 	LED_FN_REPLY_PACKET
 } LedFunctionState;
 
