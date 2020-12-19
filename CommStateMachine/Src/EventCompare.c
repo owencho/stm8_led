@@ -6,6 +6,7 @@
  */
 
 #include "EventCompare.h"
+/*
 int eventCompareForAddingTimeEvent(TimerEvent *currentEvent, TimerEvent * newEvent){
 	if(currentEvent == NULL || newEvent == NULL)
 		return 0;
@@ -22,7 +23,7 @@ int eventCompareForAddingTimeEvent(TimerEvent *currentEvent, TimerEvent * newEve
 		return 0;
 	}
 }
-
+/*
 int eventCompareSameTimeEvent(TimerEvent *currentEvent, Event * deleteEvent){
 	Event * event = currentEvent->data;
 	if(event == NULL || deleteEvent == NULL)
@@ -35,7 +36,7 @@ int eventCompareSameTimeEvent(TimerEvent *currentEvent, Event * deleteEvent){
 		return 0;
 	}
 }
-
+*/
 int eventCompareSameEvent(Event *currentEvent, Event * deleteEvent){
 	if(currentEvent == NULL || deleteEvent == NULL)
 		return 0;

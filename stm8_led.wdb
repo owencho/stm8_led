@@ -45,7 +45,7 @@ ptn_Child35=Bar-34
 
 [WorkState_v1_2.DockState.Bar-0]
 BarID=59419
-Bars=40
+Bars=42
 Bar#0=0
 Bar#1=59392
 Bar#2=59396
@@ -86,6 +86,8 @@ Bar#36=0
 Bar#37=0
 Bar#38=0
 Bar#39=0
+Bar#40=0
+Bar#41=0
 Style=0
 ExStyle=0
 PrevFloating=False
@@ -507,14 +509,14 @@ Buttons=IFGBAAAAAAJFGBAAAAAAAAAAAAAAAAFEGBAAAAAACEPBAAAAAAMBJIAAAAAAMEGBAAAAAAAA
 
 [WorkState_v1_2.DockState.Bar-12]
 BarID=59398
-XPos=418
+XPos=421
 YPos=88
 MRUWidth=339
 Docking=True
 MRUDockID=59419
-MRUDockLeftPos=418
+MRUDockLeftPos=421
 MRUDockTopPos=88
-MRUDockRightPos=774
+MRUDockRightPos=777
 MRUDockBottomPos=118
 MRUFloatStyle=8196
 MRUFloatXPos=-2
@@ -547,14 +549,14 @@ Buttons=KAAIAAAACAEGAAMAAIAAAACAEGAAAAAAAAAAAABBAIAAAAAACBAIAAAAAADBAIAAAAAAAAAA
 
 [WorkState_v1_2.DockState.Bar-13]
 BarID=59399
-XPos=16
+XPos=19
 YPos=88
 MRUWidth=385
 Docking=True
 MRUDockID=59419
-MRUDockLeftPos=16
+MRUDockLeftPos=19
 MRUDockTopPos=88
-MRUDockRightPos=418
+MRUDockRightPos=421
 MRUDockBottomPos=118
 MRUFloatStyle=8196
 MRUFloatXPos=-2
@@ -627,14 +629,14 @@ Buttons=JPAIAAAAAAAFPBAAAAAANEPBAAAAAABFPBAAAAAACFPBAAAAAA
 
 [WorkState_v1_2.DockState.Bar-15]
 BarID=59401
-XPos=774
+XPos=777
 YPos=88
 MRUWidth=77
 Docking=True
 MRUDockID=59419
-MRUDockLeftPos=774
+MRUDockLeftPos=777
 MRUDockTopPos=88
-MRUDockRightPos=845
+MRUDockRightPos=848
 MRUDockBottomPos=118
 MRUFloatStyle=8196
 MRUFloatXPos=-2
@@ -1295,8 +1297,8 @@ ResourceID=0
 BarID=59423
 Horz=True
 Floating=True
-XPos=1912
-YPos=80
+XPos=-390
+YPos=508
 Bars=3
 Bar#0=0
 Bar#1=59397

@@ -68,11 +68,11 @@ struct UsartDriverInfo {
 		int isEventOccupied;
     int rxCounter;
     int rxLen;
-    uint8_t * rxMallocBuffer;
+    //uint8_t * rxMallocBuffer;
     uint8_t rxStaticBuffer[STATIC_BUFFER_SIZE];
     uint8_t rxCRC16 [2];
     //Common
-    SystemEvent sysEvent;
+    //SystemEvent sysEvent;
     UsartPort portName;
 };
 STATIC int findPacketLength(uint8_t* data);
@@ -99,15 +99,15 @@ STATIC int checkRxPacketCRC(UsartPort port);
 STATIC void resetUsartDriverReceive(UsartPort port);
 STATIC void generateEventForReceiveComplete(UsartPort port);
 //STATIC void generateAndSendNotAvailablePacket(UsartPort port);
-STATIC GenericStateMachine * getStateMachineInfoFromAVL(UsartPort port);
-void generateFlagAndTransmit(UsartPort port,uint8_t rxAddress,UsartDriverFlags flags,UsartEvent * event);
-STATIC void requestForFreeMemoryEvent(UsartPort port);
+//STATIC GenericStateMachine * getStateMachineInfoFromAVL(UsartPort port);
+//void generateFlagAndTransmit(UsartPort port,uint8_t rxAddress,UsartDriverFlags flags,UsartEvent * event);
+//STATIC void requestForFreeMemoryEvent(UsartPort port);
 STATIC void findSMInfoAndGenerateEvent(UsartPort port);
 //malloc function
-void allocMemForReceiver(Event * event);
-void freeMemForReceiver(Event * event);
+//void allocMemForReceiver(Event * event);
+//void freeMemForReceiver(Event * event);
 //removeUSartEvent
-void removeTimerEventFromQueue(Event * event);
+//void removeTimerEventFromQueue(Event * event);
 void removeAbortEventFromQueue(UsartEvent * evt);
 void setNoMoreUsartEvent(void);
 #endif // USARTDRIVER_H

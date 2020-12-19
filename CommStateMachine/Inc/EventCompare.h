@@ -9,8 +9,8 @@
 #define INC_EVENTCOMPARE_H_
 #include "Event.h"
 #include <stdlib.h>
-#include "TimerEvent.h"
-int eventCompareForAddingTimeEvent (TimerEvent *currentEvent, TimerEvent * newEvent);
-int eventCompareSameTimeEvent(TimerEvent *currentEvent, Event * deleteEvent);
+//#include "TimerEvent.h"
+//int eventCompareForAddingTimeEvent (TimerEvent *currentEvent, TimerEvent * newEvent);
+//int eventCompareSameTimeEvent(TimerEvent *currentEvent, Event * deleteEvent);
 int eventCompareSameEvent(Event *currentEvent, Event * deleteEvent);
 #endif /* INC_EVENTCOMPARE_H_ */

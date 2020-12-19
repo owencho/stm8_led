@@ -51,17 +51,13 @@ crtsi0.sm8
 # Object files list - section reserved for STVD
 #<BEGIN OBJECT_FILES>
 Debug\led_interruptfn.o
-Debug\cmdcompareforavl.o
 Debug\commeventqueue.o
-Debug\commstatemachine.o
 Debug\crc.o
 Debug\eventcompare.o
 Debug\eventqueue.o
 Debug\irq.o
 Debug\list.o
 Debug\listitemcompare.o
-Debug\timereventisr.o
-Debug\timereventqueue.o
 Debug\usartdriver.o
 Debug\usarthardware.o
 Debug\led_function.o
@@ -88,8 +84,8 @@ Debug\stm8s_wwdg.o
 
 # Library list - section reserved for STVD
 #<BEGIN LIBRARY_FILES>
-libfsl0.sm8
-libisl0.sm8
+libfs0.sm8
+libis0.sm8
 libm0.sm8
 #<END LIBRARY_FILES>
 

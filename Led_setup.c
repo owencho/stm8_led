@@ -5,7 +5,7 @@ void GPIO_setup(void){
 	//PWM
 	GPIO_Init(GPIOC, (GPIO_PIN_3),GPIO_MODE_OUT_PP_HIGH_FAST);
 	//TEMP SENSOR
-	GPIO_Init(GPIOC, (GPIO_PIN_4 ),GPIO_MODE_IN_PU_NO_IT);
+	GPIO_Init(GPIOC, (GPIO_PIN_4 ),GPIO_MODE_IN_FL_NO_IT);
 	//setting for RS485
 	GPIO_Init(GPIOC, (GPIO_PIN_7),GPIO_MODE_OUT_PP_HIGH_FAST);
 	
@@ -49,7 +49,7 @@ void TIM1_setup(void){
 	TIM1_DeInit();
 	//Init the period 
 
-	TIM1_TimeBaseInit(TIM1_PRESCALER_1,TIM1_COUNTERMODE_UP,16000,0);
+	TIM1_TimeBaseInit(TIM1_PRESCALER_1,TIM1_COUNTERMODE_UP,8000,0);
 	// 1/frequency, count value 800, frequency=16M/8000=2kHZ
 	
 	TIM1_OC3Init(TIM1_OCMODE_PWM1, TIM1_OUTPUTSTATE_ENABLE, 
@@ -89,7 +89,7 @@ void UART1_setup(void){
 
 void ADC1_setup(void){               
 	ADC1_DeInit();
-	ADC1_PrescalerConfig  (ADC1_PRESSEL_FCPU_D18);
+	ADC1_PrescalerConfig  (ADC1_PRESSEL_FCPU_D2);
 	ADC1_ConversionConfig  (ADC1_CONVERSIONMODE_SINGLE ,  
 													ADC1_CHANNEL_3 ,  
 													ADC1_ALIGN_RIGHT); 

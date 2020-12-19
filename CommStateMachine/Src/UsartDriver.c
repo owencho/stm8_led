@@ -4,7 +4,7 @@
 #include "Event.h"
 #include "List.h"
 #include "Irq.h"
-#include "TimerEventQueue.h"
+//#include "TimerEventQueue.h"
 #include "CommEventQueue.h"
 #include "CmdCompareForAVL.h"
 #include "led_function.h"
@@ -19,7 +19,7 @@ GenericStateMachine freeMemInfo;
 GenericStateMachine setLEDInfo;
 GenericStateMachine setIntensityInfo;
 GenericStateMachine getTempInfo;
-GenericStateMachine getVoltageInfo;
+GenericStateMachine getEPInfo;
 GenericStateMachine setCutOffTempInfo;
 
 uint8_t txDataForFlags[2];
@@ -64,17 +64,19 @@ STATIC void usartDriverInit(void){
 
     //usartDriverInfo.abortInfo = NULL;
     usartDriverInfo.rxState = RX_IDLE;
-    usartDriverInfo.rxMallocBuffer = NULL;
+//    usartDriverInfo.rxMallocBuffer = NULL;
     usartDriverInfo.rxCounter = 0;
     usartDriverInfo.rxLen = 0;
 		
 		abortInfo.callback = (Callback)removeAbortEventFromQueue;
-    mallocInfo.callback = (Callback)allocMemForReceiver;
-    freeMemInfo.callback = (Callback)freeMemForReceiver;
+    //mallocInfo.callback = (Callback)allocMemForReceiver;
+    //freeMemInfo.callback = (Callback)freeMemForReceiver;
 		
 		setIntensityInfo.callback = (Callback)configureLEDIntensity;
 		setLEDInfo.callback = (Callback)configureLEDPower;
 		setCutOffTempInfo.callback = (Callback)configureLEDCutOffTemp;
+		getTempInfo.callback =(Callback)getTemperatureSM;
+		getEPInfo.callback =(Callback)getElectricalParameterSM;
 }
 
 void usartInit(void){
@@ -231,7 +233,7 @@ STATIC void handleCRC16WithStaticBuffer(UsartPort port,uint16_t rxByte){
     uint8_t eventByte = rxByte >> 8;
     uint8_t dataByte = rxByte & 0xFF;
     UsartDriverInfo * info =&usartDriverInfo;
-    uint8_t * mallocBuffer = usartDriverInfo.rxMallocBuffer;
+//    uint8_t * mallocBuffer = usartDriverInfo.rxMallocBuffer;
     uint8_t * staticBuffer = usartDriverInfo.rxStaticBuffer;
     uint8_t * rxCRC16 = usartDriverInfo.rxCRC16;
 
@@ -262,7 +264,7 @@ STATIC int checkRxPacketCRC(UsartPort port){
 }
 
 STATIC void generateEventForReceiveComplete(UsartPort port){
-    uint8_t * rxBuffer = usartDriverInfo.rxMallocBuffer;
+//    uint8_t * rxBuffer = usartDriverInfo.rxMallocBuffer;
 
     if(checkRxPacketCRC(port)){
         usartDriverInfo.rxUsartEvent.type = PACKET_RX_EVENT;
@@ -289,9 +291,9 @@ STATIC void findSMInfoAndGenerateEvent(UsartPort port){
 						 break;
 		case 1 : infoSM = &setIntensityInfo;
 						 break;
-		case 2 : //getVoltage
+		case 2 : infoSM = &getEPInfo;
 						 break;
-		case 3 : //getTemp
+		case 3 : infoSM = &getTempInfo;
 						 break;
 		case 4 : infoSM = &setCutOffTempInfo;
 						 break;
@@ -303,15 +305,15 @@ STATIC void findSMInfoAndGenerateEvent(UsartPort port){
 		usartDriverInfo.rxCounter = 0;
 		usartDriverInfo.rxLen = 0;
 }
-
+/*
 void generateFlagAndTransmit(UsartPort port,uint8_t rxAddress,UsartDriverFlags flags,UsartEvent * event){
-	uint8_t * rxBuffer = usartDriverInfo.rxMallocBuffer;
+//	uint8_t * rxBuffer = usartDriverInfo.rxMallocBuffer;
 	uint8_t flagByte = 1<<flags;
 	txDataForFlags[0]=flagByte;
 	txDataForFlags[1]=getCommandByte(usartDriverInfo);
 	usartDriverTransmit(port,rxAddress,2,txDataForFlags,event);
 }
-
+*/
 STATIC void resetUsartDriverReceive(UsartPort port){
 		if(usartDriverInfo.isEventOccupied){
 			usartDriverInfo.abortUsartEvent.stateMachineInfo =&abortInfo;
@@ -331,7 +333,7 @@ STATIC void generateCRC16forTxPacket(UsartPort port){
     crc16 = generateCrc16(txBuffer, length-1);
 	*(uint16_t*)&txCRC16[0] = crc16;
 }
-
+/*
 STATIC void requestForFreeMemoryEvent(UsartPort port){
 	usartDriverInfo.sysEvent.stateMachineInfo = &freeMemInfo;
 	usartDriverInfo.sysEvent.data = (void*)&usartDriverInfo;
@@ -364,12 +366,12 @@ void removeTimerEventFromQueue(Event * event){
 	}
     enableIRQ();
 }
-
+*/
 void removeAbortEventFromQueue(UsartEvent * evt){
 	Event * abortEvent = (Event*)evt->data;
 	disableIRQ();
 	if(!eventQueueDeleteEvent(&evtQueue,abortEvent)){
-		timerEventDequeueSelectedEvent(&timerQueue,(TimerEvent*)abortEvent);
+		//timerEventDequeueSelectedEvent(&timerQueue,(TimerEvent*)abortEvent);
 	}
 	enableIRQ();
 }
