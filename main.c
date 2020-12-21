@@ -16,7 +16,7 @@
 //#include <stdarg.h>
 //#include <string.h>
 #include <math.h>
-
+/*
 void Serial_print_int (int number)  {
 	char count = 0;
 	char digit[5] = "";         
@@ -33,6 +33,7 @@ void Serial_print_int (int number)  {
 		count--;
 	}
 }
+*/
 //testing
 /*
 GenericStateMachine sm;

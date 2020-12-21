@@ -180,7 +180,7 @@ void configureLEDIntensity(Event * event){
             ledIntensityState = LED_FN_IDLE;
 						setNoMoreUsartEvent();
             break;
-    }	
+	}	
 		enableIRQ();
 }
 
@@ -192,8 +192,8 @@ void configureLEDPower(Event * event){
 	disableIRQ();
 	switch(ledPowerState){
         case LED_FN_IDLE :
-						ledPower = data[DATA_OFFSET];
-						setLEDPower(ledPower);
+						//ledPower = data[DATA_OFFSET];
+						setLEDPower(data[DATA_OFFSET]);
 						ledPowerData[0] = 0; //command
 						usartDriverTransmit(MAIN_CONTROLLER,MASTER_ADDRESS
 																,1,ledPowerData,usartEvent);

@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include "SM_Common.h"
 //This is user define configuration
-#define USART_ADDRESS 0x1
+#define USART_ADDRESS 0x2
 #define MASTER_ADDRESS 0x0
 #define RX_PACKET_START 0x11
 
@@ -43,7 +43,7 @@ struct UsartInfo {
     //link usartDriverInfo
 };
 
-#define getUsartNumber() (sizeof(usartInfo)/sizeof(UsartInfo))
+//#define getUsartNumber() (sizeof(usartInfo)/sizeof(UsartInfo))
 
 STATIC void initUsartHardwareInfo(UsartPort port);
 void usartHardwareInit(void);

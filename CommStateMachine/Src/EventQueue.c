@@ -17,7 +17,7 @@ void eventEnqueue(EventQueue * queue,Event * event){
 
 int eventDequeue(EventQueue * queue,Event ** event){
 	  disableIRQ();
-    if(queue == NULL || event == NULL || queue->count ==0){
+     if(queue == NULL || event == NULL || queue->count ==0){
     	  enableIRQ();
       	return 0;
     }

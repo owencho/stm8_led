@@ -44,7 +44,7 @@ ptn_Child33=Bar-32
 
 [WorkState_v1_2.DockState.Bar-0]
 BarID=59419
-Bars=43
+Bars=33
 Bar#0=0
 Bar#1=59392
 Bar#2=59396
@@ -78,16 +78,6 @@ Bar#29=0
 Bar#30=0
 Bar#31=0
 Bar#32=0
-Bar#33=0
-Bar#34=0
-Bar#35=0
-Bar#36=0
-Bar#37=0
-Bar#38=0
-Bar#39=0
-Bar#40=0
-Bar#41=0
-Bar#42=0
 Style=0
 ExStyle=0
 PrevFloating=False
@@ -356,9 +346,9 @@ MRUWidth=188
 Docking=True
 MRUDockID=59419
 MRUDockLeftPos=0
-MRUDockTopPos=29
-MRUDockRightPos=925
-MRUDockBottomPos=58
+MRUDockTopPos=31
+MRUDockRightPos=1920
+MRUDockBottomPos=60
 MRUFloatStyle=8192
 MRUFloatXPos=-195
 MRUFloatYPos=157
@@ -372,7 +362,7 @@ LastAlignedDocking=0
 PctWidth=1000000
 MRUFloatCX=205
 MRUFloatCY=71
-MRUHorzDockCX=925
+MRUHorzDockCX=1920
 MRUHorzDockCY=29
 MRUVertDockCX=76
 MRUVertDockCY=721
@@ -393,9 +383,9 @@ BarID=59392
 MRUWidth=131
 Docking=True
 MRUDockID=59419
-MRUDockLeftPos=-1
+MRUDockLeftPos=8
 MRUDockTopPos=31
-MRUDockRightPos=147
+MRUDockRightPos=156
 MRUDockBottomPos=61
 MRUFloatStyle=8196
 MRUFloatXPos=-2
@@ -507,14 +497,14 @@ Buttons=IFGBAAAAAAJFGBAAAAAAAAAAAAAAAAFEGBAAAAAAIEGBAAAAAAMBJIAAAAAAMEGBAAAAAAAA
 
 [WorkState_v1_2.DockState.Bar-12]
 BarID=59398
-XPos=414
+XPos=478
 YPos=88
 MRUWidth=339
 Docking=True
 MRUDockID=59419
-MRUDockLeftPos=414
+MRUDockLeftPos=478
 MRUDockTopPos=88
-MRUDockRightPos=770
+MRUDockRightPos=834
 MRUDockBottomPos=118
 MRUFloatStyle=8196
 MRUFloatXPos=-2
@@ -526,7 +516,7 @@ MDIChild=False
 AutoHide=False
 AutoHidePinned=False
 LastAlignedDocking=0
-PctWidth=127407
+PctWidth=222885
 MRUFloatCX=356
 MRUFloatCY=30
 MRUHorzDockCX=356
@@ -547,14 +537,14 @@ Buttons=KAAIAAAACAEGAAMAAIAAAACAEGAAAAAAAAAAAABBAIAAAAAACBAIAAAAAADBAIAAAAAAAAAA
 
 [WorkState_v1_2.DockState.Bar-13]
 BarID=59399
-XPos=12
+XPos=75
 YPos=88
 MRUWidth=385
 Docking=True
 MRUDockID=59419
-MRUDockLeftPos=12
+MRUDockLeftPos=75
 MRUDockTopPos=88
-MRUDockRightPos=414
+MRUDockRightPos=477
 MRUDockBottomPos=118
 MRUFloatStyle=8192
 MRUFloatXPos=31
@@ -566,8 +556,8 @@ MDIChild=False
 AutoHide=False
 AutoHidePinned=False
 LastAlignedDocking=0
-PctWidth=714187
-MRUFloatCX=399
+PctWidth=500000
+MRUFloatCX=402
 MRUFloatCY=30
 MRUHorzDockCX=402
 MRUHorzDockCY=30
@@ -627,14 +617,14 @@ Buttons=JPAIAAAAAA
 
 [WorkState_v1_2.DockState.Bar-15]
 BarID=59401
-XPos=770
+XPos=834
 YPos=88
 MRUWidth=77
 Docking=True
 MRUDockID=59419
-MRUDockLeftPos=770
+MRUDockLeftPos=834
 MRUDockTopPos=88
-MRUDockRightPos=841
+MRUDockRightPos=905
 MRUDockBottomPos=118
 MRUFloatStyle=8196
 MRUFloatXPos=-2
@@ -646,7 +636,7 @@ MDIChild=False
 AutoHide=False
 AutoHidePinned=False
 LastAlignedDocking=0
-PctWidth=158405
+PctWidth=277114
 MRUFloatCX=94
 MRUFloatCY=30
 MRUHorzDockCX=71
@@ -751,9 +741,9 @@ YPos=-2
 Docking=True
 MRUDockID=59420
 MRUDockLeftPos=1
-MRUDockTopPos=-2
+MRUDockTopPos=31
 MRUDockRightPos=296
-MRUDockBottomPos=336
+MRUDockBottomPos=754
 MRUFloatStyle=4
 MRUFloatXPos=-2
 MRUFloatYPos=0
@@ -770,7 +760,7 @@ MRUFloatCY=180
 MRUHorzDockCX=300
 MRUHorzDockCY=180
 MRUVertDockCX=295
-MRUVertDockCY=338
+MRUVertDockCY=723
 MRUDockingState=0
 DockingStyle=61440
 TypeID=0
@@ -786,7 +776,7 @@ Docking=True
 MRUDockID=0
 MRUDockLeftPos=1
 MRUDockTopPos=5
-MRUDockRightPos=925
+MRUDockRightPos=1920
 MRUDockBottomPos=155
 MRUFloatStyle=4
 MRUFloatXPos=-2
@@ -801,7 +791,7 @@ LastAlignedDocking=0
 PctWidth=1000000
 MRUFloatCX=300
 MRUFloatCY=180
-MRUHorzDockCX=924
+MRUHorzDockCX=1919
 MRUHorzDockCY=150
 MRUVertDockCX=300
 MRUVertDockCY=180
@@ -1265,8 +1255,8 @@ ptn_Child1=MainFrame
 ptn_Child2=ChildFrames
 
 [WorkState_v1_2.Frames.MainFrame]
-WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPKPPPPPPPEPAAAAAAHKDAAAAADJDAAAAA
-Title=ST Visual Develop - stm8_led.stw - [UsartHardware.c]
+WindowPlacement=MCAAAAAACAAAAAAADAAAAAAAPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPDOPPPPPPFMAAAAAAAJDAAAAAHHDAAAAA
+Title=ST Visual Develop - stm8_led.stw - [led_interruptfn.c]
 
 [WorkState_v1_2.Frames.ChildFrames]
 ptn_Child1=Document-0
@@ -1279,6 +1269,9 @@ ptn_Child7=Document-6
 ptn_Child8=Document-7
 ptn_Child9=Document-8
 ptn_Child10=Document-9
+ptn_Child11=Document-10
+ptn_Child12=Document-11
+ptn_Child13=Document-12
 
 [WorkState_v1_2.Frames.ChildFrames.Document-0]
 ptn_Child1=ViewFrame-0
@@ -1295,50 +1288,17 @@ IsFrameVisible=True
 ptn_Child1=ViewFrame-0
 
 [WorkState_v1_2.Frames.ChildFrames.Document-1.ViewFrame-0]
-DocPathName=led_function.c
+DocPathName=led_interruptfn.c
 DocumentString=
 DocTemplateIndex=0
-WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPOEAAAAAAOEAAAAAADIFAAAAANBCAAAAA
-IsActiveChildFrame=False
+WindowPlacement=MCAAAAAACAAAAAAADAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPMJAAAAAAMJAAAAAADBCAAAAAGGCAAAAA
+IsActiveChildFrame=True
 IsFrameVisible=True
 
 [WorkState_v1_2.Frames.ChildFrames.Document-2]
 ptn_Child1=ViewFrame-0
 
 [WorkState_v1_2.Frames.ChildFrames.Document-2.ViewFrame-0]
-DocPathName=commstatemachine\src\eventqueue.c
-DocumentString=
-DocTemplateIndex=0
-WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPIGAAAAAAIGAAAAAANJFAAAAAHDCAAAAA
-IsActiveChildFrame=False
-IsFrameVisible=True
-
-[WorkState_v1_2.Frames.ChildFrames.Document-3]
-ptn_Child1=ViewFrame-0
-
-[WorkState_v1_2.Frames.ChildFrames.Document-3.ViewFrame-0]
-DocPathName=commstatemachine\src\usarthardware.c
-DocumentString=
-DocTemplateIndex=0
-WindowPlacement=MCAAAAAACAAAAAAADAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPEDAAAAAAEDAAAAAAMACAAAAAIABAAAAA
-IsActiveChildFrame=True
-IsFrameVisible=True
-
-[WorkState_v1_2.Frames.ChildFrames.Document-4]
-ptn_Child1=ViewFrame-0
-
-[WorkState_v1_2.Frames.ChildFrames.Document-4.ViewFrame-0]
-DocPathName=led_interruptfn.c
-DocumentString=
-DocTemplateIndex=0
-WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPMJAAAAAAMJAAAAAADBCAAAAAGGCAAAAA
-IsActiveChildFrame=False
-IsFrameVisible=True
-
-[WorkState_v1_2.Frames.ChildFrames.Document-5]
-ptn_Child1=ViewFrame-0
-
-[WorkState_v1_2.Frames.ChildFrames.Document-5.ViewFrame-0]
 DocPathName=stm8sdl\src\stm8s_uart1.c
 DocumentString=
 DocTemplateIndex=0
@@ -1346,10 +1306,10 @@ WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPGLAAAAAA
 IsActiveChildFrame=False
 IsFrameVisible=True
 
-[WorkState_v1_2.Frames.ChildFrames.Document-6]
+[WorkState_v1_2.Frames.ChildFrames.Document-3]
 ptn_Child1=ViewFrame-0
 
-[WorkState_v1_2.Frames.ChildFrames.Document-6.ViewFrame-0]
+[WorkState_v1_2.Frames.ChildFrames.Document-3.ViewFrame-0]
 DocPathName=commstatemachine\src\irq.c
 DocumentString=
 DocTemplateIndex=0
@@ -1357,10 +1317,10 @@ WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPANAAAAAA
 IsActiveChildFrame=False
 IsFrameVisible=True
 
-[WorkState_v1_2.Frames.ChildFrames.Document-7]
+[WorkState_v1_2.Frames.ChildFrames.Document-4]
 ptn_Child1=ViewFrame-0
 
-[WorkState_v1_2.Frames.ChildFrames.Document-7.ViewFrame-0]
+[WorkState_v1_2.Frames.ChildFrames.Document-4.ViewFrame-0]
 DocPathName=led_function.h
 DocumentString=
 DocTemplateIndex=0
@@ -1368,14 +1328,47 @@ WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPAAAAAAAA
 IsActiveChildFrame=False
 IsFrameVisible=True
 
-[WorkState_v1_2.Frames.ChildFrames.Document-8]
+[WorkState_v1_2.Frames.ChildFrames.Document-5]
 ptn_Child1=ViewFrame-0
 
-[WorkState_v1_2.Frames.ChildFrames.Document-8.ViewFrame-0]
+[WorkState_v1_2.Frames.ChildFrames.Document-5.ViewFrame-0]
 DocPathName=debug\stm8_led.lkf
 DocumentString=
 DocTemplateIndex=0
 WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPKBAAAAAAKBAAAAAAAMBAAAAAEOBAAAAA
+IsActiveChildFrame=False
+IsFrameVisible=True
+
+[WorkState_v1_2.Frames.ChildFrames.Document-6]
+ptn_Child1=ViewFrame-0
+
+[WorkState_v1_2.Frames.ChildFrames.Document-6.ViewFrame-0]
+DocPathName=commstatemachine\inc\usartdriver.h
+DocumentString=
+DocTemplateIndex=0
+WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPKBAAAAAAKBAAAAAAAMBAAAAAEOBAAAAA
+IsActiveChildFrame=False
+IsFrameVisible=True
+
+[WorkState_v1_2.Frames.ChildFrames.Document-7]
+ptn_Child1=ViewFrame-0
+
+[WorkState_v1_2.Frames.ChildFrames.Document-7.ViewFrame-0]
+DocPathName=commstatemachine\inc\usarthardware.h
+DocumentString=
+DocTemplateIndex=0
+WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPEDAAAAAAEDAAAAAAKNBAAAAAOPBAAAAA
+IsActiveChildFrame=False
+IsFrameVisible=True
+
+[WorkState_v1_2.Frames.ChildFrames.Document-8]
+ptn_Child1=ViewFrame-0
+
+[WorkState_v1_2.Frames.ChildFrames.Document-8.ViewFrame-0]
+DocPathName=commstatemachine\src\usartdriver.c
+DocumentString=
+DocTemplateIndex=0
+WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPOEAAAAAAOEAAAAAAEPBAAAAAIBCAAAAA
 IsActiveChildFrame=False
 IsFrameVisible=True
 
@@ -1387,5 +1380,38 @@ DocPathName=led_setup.c
 DocumentString=
 DocTemplateIndex=0
 WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPEDAAAAAAEDAAAAAALKBAAAAAOPBAAAAA
+IsActiveChildFrame=False
+IsFrameVisible=True
+
+[WorkState_v1_2.Frames.ChildFrames.Document-10]
+ptn_Child1=ViewFrame-0
+
+[WorkState_v1_2.Frames.ChildFrames.Document-10.ViewFrame-0]
+DocPathName=led_function.c
+DocumentString=
+DocTemplateIndex=0
+WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPOEAAAAAAOEAAAAAADIFAAAAANBCAAAAA
+IsActiveChildFrame=False
+IsFrameVisible=True
+
+[WorkState_v1_2.Frames.ChildFrames.Document-11]
+ptn_Child1=ViewFrame-0
+
+[WorkState_v1_2.Frames.ChildFrames.Document-11.ViewFrame-0]
+DocPathName=commstatemachine\src\eventqueue.c
+DocumentString=
+DocTemplateIndex=0
+WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPIGAAAAAAIGAAAAAANJFAAAAAHDCAAAAA
+IsActiveChildFrame=False
+IsFrameVisible=True
+
+[WorkState_v1_2.Frames.ChildFrames.Document-12]
+ptn_Child1=ViewFrame-0
+
+[WorkState_v1_2.Frames.ChildFrames.Document-12.ViewFrame-0]
+DocPathName=commstatemachine\src\usarthardware.c
+DocumentString=
+DocTemplateIndex=0
+WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPEDAAAAAAEDAAAAAAMACAAAAAIABAAAAA
 IsActiveChildFrame=False
 IsFrameVisible=True

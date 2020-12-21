@@ -41,7 +41,7 @@ extern volatile uint8_t isLEDCutOff;
 	ADC1_ClearFlag(ADC1_FLAG_EOC);
 	tempValue = (1/denomOfTempEquation)-273.15;
 	if(tempValue > cutOffTemp && isLEDCutOff ==0){
-		setLEDPower(0);
+		setLEDIntensity(0);
 		isLEDCutOff = 1;
 	}	
 	ADC1_ITConfig(ADC1_IT_EOCIE ,DISABLE);

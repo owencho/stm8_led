@@ -73,7 +73,7 @@ struct UsartDriverInfo {
     uint8_t rxCRC16 [2];
     //Common
     //SystemEvent sysEvent;
-    UsartPort portName;
+    //UsartPort portName;
 };
 STATIC int findPacketLength(uint8_t* data);
 STATIC int isCorrectAddress(UsartDriverInfo info);

@@ -89,7 +89,7 @@ void UART1_setup(void){
 
 void ADC1_setup(void){               
 	ADC1_DeInit();
-	ADC1_PrescalerConfig  (ADC1_PRESSEL_FCPU_D2);
+	ADC1_PrescalerConfig  (ADC1_PRESSEL_FCPU_D18);
 	ADC1_ConversionConfig  (ADC1_CONVERSIONMODE_SINGLE ,  
 													ADC1_CHANNEL_3 ,  
 													ADC1_ALIGN_RIGHT); 
