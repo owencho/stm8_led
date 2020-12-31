@@ -6,13 +6,13 @@ void enableAutoCutOffTemp(void);
 double getTemperature(void);
 double getVoltage(void);
 double getCurrent(void);
-void setLEDPower(uint8_t inputValue);
+void configureLEDIntensity(void);
 void setLEDIntensity(uint8_t intValue);
 
 void getTemperatureSM(Event * event);
-void configureLEDIntensity(Event * event);
-void configureLEDPower(Event * event);
-void configureLEDCutOffTemp(Event * event);
+void ledIntensitySM(Event * event);
+void ledPowerSM(Event * event);
+void ledCutOffTempSM(Event * event);
 void getElectricalParameterSM(Event * event);
 typedef enum{
 	LED_FN_IDLE,

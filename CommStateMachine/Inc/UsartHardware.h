@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include "SM_Common.h"
 //This is user define configuration
-#define USART_ADDRESS 0x3
+#define USART_ADDRESS 0x1
 #define MASTER_ADDRESS 0x0
 #define RX_PACKET_START 0x11
 

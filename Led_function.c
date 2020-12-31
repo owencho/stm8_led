@@ -11,6 +11,11 @@ volatile uint8_t ledPower = 1;
 volatile uint8_t cutOffTemp = 110;
 volatile uint8_t isLEDCutOff = 0;
 
+#define IS_POWER_ON (ledPower)
+#define IS_POWER_OFF (!ledPower)
+#define IS_OVERHEATING (isLEDCutOff)
+#define CURRENT_INTENSITY (ledIntensity)
+
 void disableAutoCutOffTemp(void){
 	TIM2_ITConfig(TIM2_IT_UPDATE,DISABLE);
 	ADC1_ITConfig(ADC1_IT_EOCIE ,DISABLE);
@@ -86,7 +91,7 @@ void setLEDIntensity(uint8_t intValue){
 	TIM1_SetCompare3(value) ;
 	enableIRQ();
 }
-
+/*
 void setLEDPower(uint8_t inputValue){
 	disableIRQ();
 	if(inputValue == 1){
@@ -100,7 +105,26 @@ void setLEDPower(uint8_t inputValue){
 	}
 	enableIRQ();
 }
+*/
+void resetOverheatingMsg(void){
+	if(IS_POWER_ON){
+		isLEDCutOff = 0;
+	}
+}
 
+void configureLEDIntensity(void){
+	uint8_t intensityValue;
+	disableIRQ();
+	if(IS_POWER_OFF || IS_OVERHEATING){
+		intensityValue = 0;
+	}
+	else{
+		intensityValue = CURRENT_INTENSITY;
+	}
+	setLEDIntensity(intensityValue);
+	enableIRQ();
+
+}
 LedFunctionState getEPState = LED_FN_IDLE;
 uint8_t getEPData[10];
 void getElectricalParameterSM(Event * event){
@@ -161,16 +185,14 @@ void getTemperatureSM(Event * event){
 LedFunctionState ledIntensityState = LED_FN_IDLE;
 volatile uint8_t ledIntensityData[5];
 volatile uint8_t resentCounter= 0 ;
-void configureLEDIntensity(Event * event){
+void ledIntensitySM(Event * event){
 	UsartEvent * usartEvent = (UsartEvent*)event;
 	char * data = usartEvent->buffer;
 	disableIRQ();
 	switch(ledIntensityState){
         case LED_FN_IDLE :
 						ledIntensity = data[DATA_OFFSET];
-						if(ledPower==1 && isLEDCutOff==0){
-							setLEDIntensity(ledIntensity);
-						}	
+						configureLEDIntensity();
 						ledIntensityData[0] = 1; //command
 						usartDriverTransmit(MAIN_CONTROLLER,MASTER_ADDRESS
 																,1,ledIntensityData,usartEvent);
@@ -186,14 +208,15 @@ void configureLEDIntensity(Event * event){
 
 LedFunctionState ledPowerState = LED_FN_IDLE;
 uint8_t ledPowerData[5];
-void configureLEDPower(Event * event){
+void ledPowerSM(Event * event){
 	UsartEvent * usartEvent = (UsartEvent*)event;
 	char * data = usartEvent->buffer;
 	disableIRQ();
 	switch(ledPowerState){
         case LED_FN_IDLE :
-						//ledPower = data[DATA_OFFSET];
-						setLEDPower(data[DATA_OFFSET]);
+						ledPower = data[DATA_OFFSET];
+						configureLEDIntensity();
+						resetOverheatingMsg();
 						ledPowerData[0] = 0; //command
 						usartDriverTransmit(MAIN_CONTROLLER,MASTER_ADDRESS
 																,1,ledPowerData,usartEvent);
@@ -209,7 +232,7 @@ void configureLEDPower(Event * event){
 
 LedFunctionState ledCutOffState = LED_FN_IDLE;
 uint8_t cutOffData[5];
-void configureLEDCutOffTemp(Event * event){
+void ledCutOffTempSM(Event * event){
 	UsartEvent * usartEvent = (UsartEvent*)event;
 	char * data = usartEvent->buffer;
 	disableIRQ();

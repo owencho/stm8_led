@@ -72,9 +72,9 @@ STATIC void usartDriverInit(void){
     //mallocInfo.callback = (Callback)allocMemForReceiver;
     //freeMemInfo.callback = (Callback)freeMemForReceiver;
 		
-		setIntensityInfo.callback = (Callback)configureLEDIntensity;
-		setLEDInfo.callback = (Callback)configureLEDPower;
-		setCutOffTempInfo.callback = (Callback)configureLEDCutOffTemp;
+		setIntensityInfo.callback = (Callback)ledIntensitySM;
+		setLEDInfo.callback = (Callback)ledPowerSM;
+		setCutOffTempInfo.callback = (Callback)ledCutOffTempSM;
 		getTempInfo.callback =(Callback)getTemperatureSM;
 		getEPInfo.callback =(Callback)getElectricalParameterSM;
 }
